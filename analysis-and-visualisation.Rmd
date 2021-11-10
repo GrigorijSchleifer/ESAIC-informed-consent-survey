@@ -34,13 +34,19 @@ table(survey_data_all_countries$`Country where you work?` == "Other")
 profession_table <- table(survey_data$Profession)
 prop.table(profession_table)
 ```
+# Expert level distribution
+```{r}
+expertise_table <- table(survey_data$`Your expert level`)
+prop.table(expertise_table)
+```
 
 ### Gender distribution
 ```{r echo=FALSE}
-# gender distribution
 gender_table <- table(survey_data$Gender)
 prop.table(gender_table)
 ```
+
+
 
 ### Table ...: Demographic distirbution stratified by gender
 ```{r}
@@ -150,36 +156,11 @@ prop.table(table(survey_data$"Do you need to obtain written Informed consent for
 
 prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
 prop.table(table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"))
-
-
-
-### conserns if online
-survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
-reasons_against <- survey_fragments %>% 
-    select(c("lack of contact", 
-             "impossible to observe behavior", 
-             "no relation", 
-            "no confidence", 
-            "legal requirenments", 
-            "unsure if illigal")) %>%
-    apply(MARGIN = 2, table) %>% 
-    as_tibble()
-
-
-gather(reasons_against[2,]) %>% 
-    ggplot(aes(x = key, y = value, fill = key)) +
-        geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What are your major concerns about online or telephone interviews?") +
-        theme_light(base_size = 15) + 
-        theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") 
-
 ```
 
 ### Table I
 
+#### Table ...
 ```{r}
 
 # map for showing the most common risc-score
@@ -224,7 +205,7 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 
 
 
-
+#### All questions separated by LimeSurvey
 ```{r}
 
 "Gender"
@@ -294,3 +275,32 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
 ```
+
+
+### Graph ..: What are your major concerns about online or telephone interviews?
+```{r}
+survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
+reasons_against <- survey_fragments %>% 
+    select(c("lack of contact", 
+             "impossible to observe behavior", 
+             "no relation", 
+            "no confidence", 
+            "legal requirenments", 
+            "unsure if illigal")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+
+gather(reasons_against[2,]) %>% 
+    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What are your major concerns about online or telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") +
+        coord_flip()
+```
+
