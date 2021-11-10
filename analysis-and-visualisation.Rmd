@@ -335,3 +335,30 @@ gather(reasons_for[2,]) %>%
         scale_fill_brewer(palette = "Set3") +
         coord_flip()
 ```
+
+### Map
+```{r}
+library(grid)
+library(rworldmap)
+
+only_counts_responses <- survey_fragments %>% 
+    dplyr::filter(country != "Other") %>% 
+    count(country) %>% 
+    select(n)
+
+survey_fragments %>% 
+    dplyr::filter(country != "Other") %>% 
+    select(country, parents.legal.online) %>% 
+    group_by(country) %>% 
+    mutate(parents.legal.online = ifelse(parents.legal.online == "Yes", 1, 0)) %>% 
+    summarise(mean_legal = mean(parents.legal.online, na.rm = TRUE)) %>% 
+    bind_cols(only_counts_responses) %>% 
+    arrange(desc(n))
+
+
+    mutate(country = fct_reorder(as.factor(country), mean_legal)) %>% 
+    ggplot(aes(x = country, y = mean_legal)) +
+    geom_bar(stat="identity") +
+    coord_flip()
+```
+
