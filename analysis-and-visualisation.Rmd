@@ -1,1 +1,246 @@
-...
+---
+title: "Digital online patient informed consent for anesthesia before elective diagnostic procedures or surgery: Recent practice in children – here stands Europe (2021)"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r echo=FALSE}
+library(tableone)
+# library(ReporteRs)
+# library(magrittr)
+```
+
+
+```{r echo=FALSE, error=FALSE, warning=FALSE, message=FALSE}
+survey_data <- read_csv("survey_data_no_other.csv")
+```
+
+#### Results section
+
+```{r}
+library(RColorBrewer)
+when_obtain_simple_complex <- c("2 days or more",
+                        "24h prior surgery",
+                        "24h or less",
+                        "Same day")
+
+cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set3')
+par(mfrow = c(1, 2))
+
+
+### When consent is obtained simple
+# prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
+when_simple <- round(c(0.1289111, 0.3516896, 0.1902378, 0.3291615), digits = 2) * 100
+pie(when_simple, 
+    labels = paste0(when_simple, "%"),
+    clockwise = TRUE,
+    col = cols,
+    cex = 1.5,
+    main = "simple procedures")
+
+legend("bottom", 
+       legend = when_obtain_simple_complex,
+       fill = cols)
+### When consent is obtained complex
+# prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
+when_complex <- round(c(0.33625, 0.30500, 0.21125, 0.14750), digits = 2) * 100
+pie(when_complex,
+    labels = paste0(when_complex, "%"),
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "complex procedures")
+
+
+
+### online legal simple vs complex
+online_eccordance_simple <- c("I don't know", 
+                              "No", 
+                              "Yes")
+cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
+par(mfrow = c(1, 2))
+
+# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
+pie(online_legal_simple,
+    labels = paste0(online_legal_simple, "%"), 
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "simple procedures")
+legend("bottom", 
+       legend = online_eccordance_simple,
+       fill = cols)
+
+
+# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
+online_legal_complex <- round(c(0.3877805, 0.4251870, 0.1870324), 2) * 100
+pie(online_legal_complex,
+    labels = paste0(online_legal_complex, "%"), 
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "complex procedures")
+
+
+
+pie(prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?")))
+
+
+
+
+prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
+prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
+
+
+prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
+prop.table(table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"))
+
+
+
+### conserns if online
+survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
+reasons_against <- survey_fragments %>% 
+    select(c("lack of contact", 
+             "impossible to observe behavior", 
+             "no relation", 
+            "no confidence", 
+            "legal requirenments", 
+            "unsure if illigal")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+
+gather(reasons_against[2,]) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What are your major concerns about online or telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") 
+
+```
+
+### Table I
+
+```{r}
+survey_data <- read_csv("survey_data_no_other.csv")
+library(tableone)
+# map for showing the most common risc-score
+## numerically coded categorical variables need to be transformed to factors\
+# Who obtains consent most often per country
+
+# factorVars <- c(
+#     "Country where you work?"
+# )
+# all variables numeric and categorical
+
+catVars = "Gender"
+
+contVars = c(
+    "Profession",
+    "Your expert level",
+    "Your expert level"
+)
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        factorVars = factorVars,
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
+           sheetName = "demographics_paper_gender_fix", 
+           col.names = TRUE, 
+           row.names = TRUE, 
+           append = TRUE)
+
+
+prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
+```
+
+
+
+
+```{r}
+
+"Gender"
+"What is your age?"
+"Profession"
+"Your expert level"
+"Years of experience"
+"Country where you work?"
+
+"Who in general obtains the informed consent prior to anaesthesia?"
+
+"[ASA-Class] Which of the following Scores do you routinely use in preoperative evaluation?"
+"[Apfel-Score] Which of the following Scores do you routinely use in preoperative evaluation?"
+"[NYHA-Score] Which of the following Scores do you routinely use in preoperative evaluation?"
+"[ARISCAT-Score] Which of the following Scores do you routinely use in preoperative evaluation?" 
+"[rCRI] Which of the following Scores do you routinely use in preoperative evaluation?"
+"[POSPOM] Which of the following Scores do you routinely use in preoperative evaluation?" 
+"[Other] Which of the following Scores do you routinely use in preoperative evaluation?" 
+"How would you prefer to do the anaesthesiological preoperative evaluation in the future?" 
+"[Other] How would you prefer to do the anaesthesiological preoperative evaluation in the future?"
+"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."
+"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."
+"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"
+"[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"
+"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"
+"[Comment] Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"
+"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"
+"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"
+"Is it possible to obtain informed consent online via internet, in your routine setting?"
+"[Comment] Is it possible to obtain informed consent online via internet, in your routine setting?"
+"Is it possible to obtain informed consent online via telefone, in your routine setting?"
+"[Comment] Is it possible to obtain informed consent online via telefone, in your routine setting?"
+"Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?"
+"[Comment] Do you know if it is legally allowed to obtain informed consent via Internet or telephone (for simple procedures, low risk patients) in your country?" 
+"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"
+"[Comment] When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"
+"[Lack of personal contact] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[Patient´s behaviour is impossible to observe] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[Personal relation with the patient cannot be build] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[Confidence in anaesthesia cannot be achieved] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[Impossible to fulfil legal requirements] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[I am not sure if it might be illegal in my country] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[Impossible to gather for anamnestic information] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[Other] What are your major concerns about online or telephone interviews? (More than one answer is possible)"
+"[If patients are from remote locations,  no travel or transportation is necessary] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+"[More relaxed for the patients] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+"[No waste of time waiting in the holding area] What could be a major advantage of online/telephone interviews? (More than one answer is possible)" 
+"[Less anger/stress due to long waiting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+"[With specific questions all information could be obtained] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+"[Together with special designed written information and professional pre-produced videos it might be more efficient than face-to-face meeting] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+"[Other] What could be a major advantage of online/telephone interviews? (More than one answer is possible)"
+"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"
+"[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"
+"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"
+"[Comment] Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"
+"[Age above ...] What requirements does a child have to fulfil to sign independently?"
+"[Comment] [Age above ...] What requirements does a child have to fulfil to sign independently?"
+"[Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?"
+"[Comment] [Having the mental capacity to understand the consequences of its decision] What requirements does a child have to fulfil to sign independently?"
+"[other ...] What requirements does a child have to fulfil to sign independently?"
+"[Comment] [other ...] What requirements does a child have to fulfil to sign independently?"
+"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"
+"[Comment] Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"
+"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"
+"[Comment] In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"
+"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
+"[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
+
+```
