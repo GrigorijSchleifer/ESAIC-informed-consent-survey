@@ -14,10 +14,17 @@ library(tableone)
 # library(magrittr)
 ```
 
-
+### Data
 ```{r echo=FALSE, error=FALSE, warning=FALSE, message=FALSE}
 survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
+survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
+```
+```{r}
+```
+
+
+```{r}
 ```
 
 # Results section
@@ -279,7 +286,6 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 
 ### Graph ..: What are your major concerns about online or telephone interviews?
 ```{r}
-survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
 reasons_against <- survey_fragments %>% 
     select(c("lack of contact", 
              "impossible to observe behavior", 
@@ -304,3 +310,28 @@ gather(reasons_against[2,]) %>%
         coord_flip()
 ```
 
+
+
+### Graph ..: What are your major concerns about online or telephone interviews?
+```{r}
+reasons_for <- survey_fragments %>% 
+    select(c("Less stressful",                  
+             "Less waiting",                    
+             "Standardized questionaires",      
+             "More efficient than face-to-face")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+
+gather(reasons_for[2,]) %>% 
+    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What could be a major advantage of online/telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") +
+        coord_flip()
+```
