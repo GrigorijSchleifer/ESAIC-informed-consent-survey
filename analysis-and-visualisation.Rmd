@@ -17,24 +17,58 @@ library(tableone)
 
 ```{r echo=FALSE, error=FALSE, warning=FALSE, message=FALSE}
 survey_data <- read_csv("survey_data_no_other.csv")
+survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
 ```
 
 # Results section
 
 ## Study pupulation
 
-### Profession distribution
-```{r}
-profession_table <- table(survey_data$Profession)
-prop.table(gender_table)
+### Responses eligible for analysis (country != "Other")
+```{r echo=FALSE}
+table(survey_data_all_countries$`Country where you work?` == "Other")
 ```
 
+### Profession distribution
+```{r echo=FALSE}
+profession_table <- table(survey_data$Profession)
+prop.table(profession_table)
+```
 
 ### Gender distribution
-```{r}
+```{r echo=FALSE}
 # gender distribution
 gender_table <- table(survey_data$Gender)
 prop.table(gender_table)
+```
+
+### Table ...: Demographic distirbution stratified by gender
+```{r}
+# stratification by gender
+catVars = "Gender"
+
+contVars = c(
+    "Profession",
+    "Your expert level"
+)
+# cava NA's for stratification is not possible since NA is dropped
+tableOne <-
+    CreateTableOne(
+        data = survey_data,
+        vars = contVars,
+        addOverall = FALSE,
+        strata = catVars
+    )
+
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+
+# writing the table to excel
+write.xlsx(results_tbl,
+           file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
+           sheetName = "demographics_paper_gender_fix", 
+           col.names = TRUE, 
+           row.names = TRUE, 
+           append = TRUE)
 ```
 
 
@@ -147,8 +181,7 @@ gather(reasons_against[2,]) %>%
 ### Table I
 
 ```{r}
-survey_data <- read_csv("survey_data_no_other.csv")
-library(tableone)
+
 # map for showing the most common risc-score
 ## numerically coded categorical variables need to be transformed to factors\
 # Who obtains consent most often per country
