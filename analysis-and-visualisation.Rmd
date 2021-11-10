@@ -19,7 +19,24 @@ library(tableone)
 survey_data <- read_csv("survey_data_no_other.csv")
 ```
 
-#### Results section
+# Results section
+
+## Study pupulation
+
+### Profession distribution
+```{r}
+profession_table <- table(survey_data$Profession)
+prop.table(gender_table)
+```
+
+
+### Gender distribution
+```{r}
+# gender distribution
+gender_table <- table(survey_data$Gender)
+prop.table(gender_table)
+```
+
 
 ```{r}
 library(RColorBrewer)
