@@ -61,6 +61,46 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 #            row.names = TRUE, 
 #            append = TRUE)
 ```
+```{r}
+survey_data_barchart <- survey_data %>% 
+    select(c("Country where you work?", "Your expert level"))
+
+colnames(survey_data_barchart) <- c("country", "expert.level")
+
+# would be nice to order in dechending order and filled with expert level
+survey_data_barchart %>%
+    dplyr::filter(!is.na(expert.level)) %>% 
+    arrange(desc(country)) %>% 
+    ggplot(aes(x = country, fill = expert.level)) +
+    geom_bar() +
+    coord_flip()
+
+# nice but no fill 
+survey_data_barchart %>%
+    dplyr::filter(!is.na(expert.level)) %>% 
+    dplyr::filter(!is.na(country)) %>% 
+    count(country, sort = TRUE) %>%
+    mutate(country = fct_reorder(country, n)) %>% 
+    ggplot(aes(x = country, n)) +
+    geom_bar(stat ="identity") +
+    coord_flip() 
+
+
+# !!!
+survey_data_barchart %>%
+    dplyr::filter(!is.na(expert.level)) %>% 
+    dplyr::filter(!is.na(country)) %>% 
+    group_by(expert.level) %>% 
+    count(country, sort = TRUE) %>%
+    mutate(country = fct_reorder(country, n)) %>% 
+    ggplot(aes(x = reorder(country, n), n, fill = expert.level)) +
+    geom_bar(stat ="identity") +
+    coord_flip() +
+    theme(legend.position="top") +
+    guides(fill = guide_legend("")) +
+    labs(x = "",
+         y = "Responses")
+```
 
 
 ### Results
@@ -113,126 +153,8 @@ pie(online_legal_ped,
 legend("bottomleft", 
        legend = online_legal_ped_answers,
        fill = cols)
-
-
-
-
-
-prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
-prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
 ```
-
-
-```{r Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?}
-prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
-
-### online legal simple vs complex
-online_eccordance_simple <- c("I don't know", 
-                              "No", 
-                              "Yes")
-cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
-par(mfrow = c(1, 2))
-
-# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-
-
-online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
-pie(online_legal_simple,
-    labels = paste0(online_legal_simple, "%"), 
-    clockwise = TRUE,
-    cex = 1.5,
-    col = cols,
-    main = "simple procedures")
-legend("bottom", 
-       legend = online_eccordance_simple,
-       fill = cols)
-```
-
-
-```{r Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"}
-### online legal simple vs complex
-online_eccordance_simple <- c("I don't know", 
-                              "No", 
-                              "Yes")
-cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
-par(mfrow = c(1, 2))
-
-# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-
-
-online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
-pie(online_legal_simple,
-    labels = paste0(online_legal_simple, "%"), 
-    clockwise = TRUE,
-    cex = 1.5,
-    col = cols,
-    main = "simple procedures")
-legend("bottom", 
-       legend = online_eccordance_simple,
-       fill = cols)
-```
-
-
-
-```{r Plot ...: What are your major concerns about online or telephone interviews?}
-reasons_against <- survey_fragments %>% 
-    select(c("lack of contact", 
-             "impossible to observe behavior", 
-             "no relation", 
-            "no confidence", 
-            "legal requirenments", 
-            "unsure if illigal")) %>%
-    apply(MARGIN = 2, table) %>% 
-    as_tibble()
-
-# absolute numbers
-reasons_against[2,]
-# proportions 
-prop.table(reasons_against[2,]) * 100
-
-gather(reasons_against[2,]) %>% 
-    mutate(key = fct_reorder(as.factor(key), value)) %>% 
-    ggplot(aes(x = key, y = value, fill = key)) +
-        geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What are your major concerns about online or telephone interviews?") +
-        theme_light(base_size = 15) + 
-        theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") +
-        coord_flip()
-```
-```{r Plot..: What could be a major advantage of online/telephone interviews?}
-reasons_for <- survey_fragments %>% 
-    select(c("Less stressful",                  
-             "Less waiting",                    
-             "Standardized questionaires",      
-             "More efficient than face-to-face")) %>%
-    apply(MARGIN = 2, table) %>% 
-    as_tibble()
-
-# absolute numbers
-reasons_for[2,]
-# proportions 
-prop.table(reasons_for[2,]) * 100
-
-gather(reasons_for[2,]) %>% 
-    mutate(key = fct_reorder(as.factor(key), value)) %>% 
-    ggplot(aes(x = key, y = value, fill = key)) +
-        geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What could be a major advantage of online/telephone interviews?") +
-        theme_light(base_size = 15) + 
-        theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") +
-        coord_flip()
-```
-
-
 ```{r Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
-prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
-
 # counts of responses in different countries
 only_counts_responses <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
@@ -286,12 +208,77 @@ map_dataframe %>%
     coord_flip()
 ```
 
+
+
+
+
+```{r Plot ...: What are your major concerns about online or telephone interviews?}
+reasons_against <- survey_fragments %>% 
+    select(c("lack of contact", 
+             "impossible to observe behavior", 
+             "no relation", 
+            "no confidence", 
+            "legal requirenments", 
+            "unsure if illigal")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+# absolute numbers
+reasons_against[2,]
+# proportions 
+prop.table(reasons_against[2,]) * 100
+
+gather(reasons_against[2,]) %>% 
+    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What are your major concerns about online or telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") +
+        coord_flip()
+```
+```{r Plot ...: What could be a major advantage of online/telephone interviews?}
+reasons_for <- survey_fragments %>% 
+    select(c("Less stressful",                  
+             "Less waiting",                    
+             "Standardized questionaires",      
+             "More efficient than face-to-face")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+# absolute numbers
+reasons_for[2,]
+# proportions 
+prop.table(reasons_for[2,]) * 100
+
+gather(reasons_for[2,]) %>% 
+    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What could be a major advantage of online/telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") +
+        coord_flip()
+```
+
+
+
+
+
+
 ```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
 
 prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"))
 
 
 ```
+
 
 
 ```{r All questions separated by LimeSurvey}
@@ -362,6 +349,29 @@ prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming 
 "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
+```
+
+```{r Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"}
+### online legal simple vs complex
+online_eccordance_simple <- c("I don't know", 
+                              "No", 
+                              "Yes")
+cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
+par(mfrow = c(1, 2))
+
+# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+
+
+online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
+pie(online_legal_simple,
+    labels = paste0(online_legal_simple, "%"), 
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "simple procedures")
+legend("bottom", 
+       legend = online_eccordance_simple,
+       fill = cols)
 ```
 
 ```{r countries for later}
