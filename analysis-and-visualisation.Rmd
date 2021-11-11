@@ -11,47 +11,28 @@ library(tableone)
 # library(magrittr)
 ```
 
-
-# Results section
-### Data
-```{r echo=FALSE, error=FALSE, warning=FALSE, message=FALSE}
+```{r Data import and cleaning}
 survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
 survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
-```
-```{r}
-```
-
-
-```{r}
-```
-
-### Responses eligible for analysis (country != "Other")
-```{r echo=FALSE}
+# Responses eligible for analysis (country != "Other")
 table(survey_data_all_countries$`Country where you work?` == "Other")
 ```
 
-### Profession distribution
-```{r echo=FALSE}
+```{r Profession distribution}
 profession_table <- table(survey_data$Profession)
 prop.table(profession_table)
 ```
-# Expert level distribution
-```{r}
+```{r Gender distribution}
+gender_table <- table(survey_data$Gender)
+prop.table(gender_table)
+```
+```{r Expert level distribution}
 expertise_table <- table(survey_data$`Your expert level`)
 prop.table(expertise_table)
 ```
 
-### Gender distribution
-```{r echo=FALSE}
-gender_table <- table(survey_data$Gender)
-prop.table(gender_table)
-```
-
-
-
-### Table ...: Demographic distirbution stratified by gender
-```{r}
+```{r Table 1: Profession and expert level distirbution stratified by gender}
 # stratification by gender
 catVars = "Gender"
 
@@ -160,20 +141,9 @@ prop.table(table(survey_data$"In case of personal presence of the parent/caregiv
 prop.table(table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"))
 ```
 
-### Table I
 
-#### Table ...
-```{r}
 
-# map for showing the most common risc-score
-## numerically coded categorical variables need to be transformed to factors\
-# Who obtains consent most often per country
-
-# factorVars <- c(
-#     "Country where you work?"
-# )
-# all variables numeric and categorical
-
+```{r Table I Demographics stratified by gender}
 catVars = "Gender"
 
 contVars = c(
@@ -200,15 +170,9 @@ write.xlsx(results_tbl,
            col.names = TRUE, 
            row.names = TRUE, 
            append = TRUE)
-
-
-prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
 ```
 
-
-
-### Graph ..: What are your major concerns about online or telephone interviews?
-```{r}
+```{r Plot ...: What are your major concerns about online or telephone interviews?}
 reasons_against <- survey_fragments %>% 
     select(c("lack of contact", 
              "impossible to observe behavior", 
@@ -219,6 +183,10 @@ reasons_against <- survey_fragments %>%
     apply(MARGIN = 2, table) %>% 
     as_tibble()
 
+# absolute numbers
+reasons_against[2,]
+# proportions 
+prop.table(reasons_against[2,]) * 100
 
 gather(reasons_against[2,]) %>% 
     mutate(key = fct_reorder(as.factor(key), value)) %>% 
@@ -233,10 +201,7 @@ gather(reasons_against[2,]) %>%
         coord_flip()
 ```
 
-
-
-### Graph ..: What could be a major advantage of online/telephone interviews?
-```{r}
+```{r Plot..: What could be a major advantage of online/telephone interviews?}
 reasons_for <- survey_fragments %>% 
     select(c("Less stressful",                  
              "Less waiting",                    
@@ -245,6 +210,10 @@ reasons_for <- survey_fragments %>%
     apply(MARGIN = 2, table) %>% 
     as_tibble()
 
+# absolute numbers
+reasons_for[2,]
+# proportions 
+prop.table(reasons_for[2,]) * 100
 
 gather(reasons_for[2,]) %>% 
     mutate(key = fct_reorder(as.factor(key), value)) %>% 
@@ -259,15 +228,15 @@ gather(reasons_for[2,]) %>%
         coord_flip()
 ```
 
-### Map
-```{r}
-library(grid)
-library(rworldmap)
 
+```{r Map}
+# counts of responses in different countries
 only_counts_responses <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
     count(country) %>% 
     select(n)
+
+mapdata <- map_data("world")
 
 map_dataframe <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
@@ -275,19 +244,34 @@ map_dataframe <- survey_fragments %>%
     group_by(country) %>% 
     mutate(parents.legal.online = ifelse(parents.legal.online == "Yes", 1, 0)) %>% 
     summarise(mean_legal = mean(parents.legal.online, na.rm = TRUE)) %>% 
-    bind_cols(only_counts_responses) %>% 
-    arrange(desc(n))
+    bind_cols(only_counts_responses) %>%
+    dplyr::filter(n > 10) %>% 
+    arrange(desc(n)) %>% 
+    print(n = 30)
 
+# changing column names, so mapdata and map_dataframe can be combined
+colnames(map_dataframe) <- c("region", "mean_legal","n")
+map_dataframe$region[map_dataframe$region == "United Kingdom (UK)"] <- "UK" 
+print(map_dataframe, n = 30)
+
+#combining both dataframes
+map_data <- left_join(mapdata, map_dataframe, by = "region")
+# filtering NA and all the countries not included in the ESAIC survey
+map_data %>% 
+    dplyr::filter(!is.na(mean_legal))
+
+
+# Countries where online consent was stated to be legal
 map_dataframe %>% 
-    mutate(country = fct_reorder(as.factor(country), n)) %>% 
-    ggplot(aes(x = country, y = mean_legal)) +
+    mutate(region = fct_reorder(as.factor(region), mean_legal)) %>% 
+    ggplot(aes(x = region, y = mean_legal)) +
     geom_col() +
-    labs(title = "Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?") +
+    labs(title = "Proportion ") +
     coord_flip()
 ```
 
 
-```{r echo=FALSE, All questions separated by LimeSurvey}
+```{r All questions separated by LimeSurvey}
 
 "Gender"
 "What is your age?"
