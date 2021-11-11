@@ -5,8 +5,10 @@ output: html_document
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-```{r echo=FALSE}
+```{r libraries}
 library(tableone)
+library(RColorBrewer)
+
 # library(ReporteRs)
 # library(magrittr)
 ```
@@ -19,6 +21,7 @@ survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
 table(survey_data_all_countries$`Country where you work?` == "Other")
 ```
 
+### Methods
 ```{r Profession distribution}
 profession_table <- table(survey_data$Profession)
 prop.table(profession_table)
@@ -31,7 +34,6 @@ prop.table(gender_table)
 expertise_table <- table(survey_data$`Your expert level`)
 prop.table(expertise_table)
 ```
-
 ```{r Table 1: Profession and expert level distirbution stratified by gender}
 # stratification by gender
 catVars = "Gender"
@@ -52,17 +54,17 @@ tableOne <-
 results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
 
 # writing the table to excel
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
-           sheetName = "demographics_paper_gender_fix", 
-           col.names = TRUE, 
-           row.names = TRUE, 
-           append = TRUE)
+# write.xlsx(results_tbl,
+#            file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
+#            sheetName = "demographics_paper_gender_fix", 
+#            col.names = TRUE, 
+#            row.names = TRUE, 
+#            append = TRUE)
 ```
 
 
-```{r}
-library(RColorBrewer)
+### Results
+```{r When do you need to obtain Informed consent for elective surgery based on legal requirements?}
 when_obtain_simple_complex <- c("2 days or more",
                         "24h prior surgery",
                         "24h or less",
@@ -71,8 +73,6 @@ when_obtain_simple_complex <- c("2 days or more",
 cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set3')
 par(mfrow = c(1, 2))
 
-
-### When consent is obtained simple
 # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
 when_simple <- round(c(0.1289111, 0.3516896, 0.1902378, 0.3291615), digits = 2) * 100
 pie(when_simple, 
@@ -82,10 +82,10 @@ pie(when_simple,
     cex = 1.5,
     main = "simple procedures")
 
-legend("bottom", 
+legend("bottomleft", 
        legend = when_obtain_simple_complex,
        fill = cols)
-### When consent is obtained complex
+
 # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
 when_complex <- round(c(0.33625, 0.30500, 0.21125, 0.14750), digits = 2) * 100
 pie(when_complex,
@@ -94,29 +94,10 @@ pie(when_complex,
     cex = 1.5,
     col = cols,
     main = "complex procedures")
+```
 
 
-
-### online legal simple vs complex
-online_eccordance_simple <- c("I don't know", 
-                              "No", 
-                              "Yes")
-cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
-par(mfrow = c(1, 2))
-
-# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
-pie(online_legal_simple,
-    labels = paste0(online_legal_simple, "%"), 
-    clockwise = TRUE,
-    cex = 1.5,
-    col = cols,
-    main = "simple procedures")
-legend("bottom", 
-       legend = online_eccordance_simple,
-       fill = cols)
-
-
+```{r}
 # prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
 online_legal_complex <- round(c(0.3877805, 0.4251870, 0.1870324), 2) * 100
 pie(online_legal_complex,
@@ -142,35 +123,28 @@ prop.table(table(survey_data$"Do you think it is necessary to verify the identit
 ```
 
 
+```{r}
+### online legal simple vs complex
+online_eccordance_simple <- c("I don't know", 
+                              "No", 
+                              "Yes")
+cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
+par(mfrow = c(1, 2))
 
-```{r Table I Demographics stratified by gender}
-catVars = "Gender"
-
-contVars = c(
-    "Profession",
-    "Your expert level",
-    "Your expert level"
-)
-# cava NA's for stratification is not possible since NA is dropped
-tableOne <-
-    CreateTableOne(
-        data = survey_data,
-        vars = contVars,
-        factorVars = factorVars,
-        addOverall = FALSE,
-        strata = catVars
-    )
-
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
-
-
-write.xlsx(results_tbl,
-           file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
-           sheetName = "demographics_paper_gender_fix", 
-           col.names = TRUE, 
-           row.names = TRUE, 
-           append = TRUE)
+# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
+pie(online_legal_simple,
+    labels = paste0(online_legal_simple, "%"), 
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "simple procedures")
+legend("bottom", 
+       legend = online_eccordance_simple,
+       fill = cols)
 ```
+
+
 
 ```{r Plot ...: What are your major concerns about online or telephone interviews?}
 reasons_against <- survey_fragments %>% 
@@ -200,7 +174,6 @@ gather(reasons_against[2,]) %>%
         scale_fill_brewer(palette = "Set3") +
         coord_flip()
 ```
-
 ```{r Plot..: What could be a major advantage of online/telephone interviews?}
 reasons_for <- survey_fragments %>% 
     select(c("Less stressful",                  
@@ -229,7 +202,9 @@ gather(reasons_for[2,]) %>%
 ```
 
 
-```{r Map}
+```{r Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
+prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
+
 # counts of responses in different countries
 only_counts_responses <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
@@ -271,6 +246,7 @@ map_data %>%
           axis.title.y=element_blank(),
           axis.title.x=element_blank(),
           rect = element_blank())
+
     
 
 # Countries where online consent was stated to be legal
@@ -280,6 +256,13 @@ map_dataframe %>%
     geom_col() +
     labs(title = "Proportion ") +
     coord_flip()
+```
+
+```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
+
+prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"))
+
+
 ```
 
 
