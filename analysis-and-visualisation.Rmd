@@ -61,7 +61,7 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 #            row.names = TRUE, 
 #            append = TRUE)
 ```
-```{r}
+```{r Specialty distribution separated by country}
 survey_data_barchart <- survey_data %>% 
     select(c("Country where you work?", "Your expert level"))
 
