@@ -2,18 +2,17 @@
 title: "Digital online patient informed consent for anesthesia before elective diagnostic procedures or surgery: Recent practice in children – here stands Europe (2021)"
 output: html_document
 ---
-
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-
-
 ```{r echo=FALSE}
 library(tableone)
 # library(ReporteRs)
 # library(magrittr)
 ```
 
+
+# Results section
 ### Data
 ```{r echo=FALSE, error=FALSE, warning=FALSE, message=FALSE}
 survey_data <- read_csv("survey_data_no_other.csv")
@@ -26,10 +25,6 @@ survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
 
 ```{r}
 ```
-
-# Results section
-
-## Study pupulation
 
 ### Responses eligible for analysis (country != "Other")
 ```{r echo=FALSE}
@@ -212,8 +207,87 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 
 
 
-#### All questions separated by LimeSurvey
+### Graph ..: What are your major concerns about online or telephone interviews?
 ```{r}
+reasons_against <- survey_fragments %>% 
+    select(c("lack of contact", 
+             "impossible to observe behavior", 
+             "no relation", 
+            "no confidence", 
+            "legal requirenments", 
+            "unsure if illigal")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+
+gather(reasons_against[2,]) %>% 
+    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What are your major concerns about online or telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") +
+        coord_flip()
+```
+
+
+
+### Graph ..: What could be a major advantage of online/telephone interviews?
+```{r}
+reasons_for <- survey_fragments %>% 
+    select(c("Less stressful",                  
+             "Less waiting",                    
+             "Standardized questionaires",      
+             "More efficient than face-to-face")) %>%
+    apply(MARGIN = 2, table) %>% 
+    as_tibble()
+
+
+gather(reasons_for[2,]) %>% 
+    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    ggplot(aes(x = key, y = value, fill = key)) +
+        geom_col() +
+        labs(x = "", 
+        y = "", 
+        title = "What could be a major advantage of online/telephone interviews?") +
+        theme_light(base_size = 15) + 
+        theme(legend.position = "None") +
+        scale_fill_brewer(palette = "Set3") +
+        coord_flip()
+```
+
+### Map
+```{r}
+library(grid)
+library(rworldmap)
+
+only_counts_responses <- survey_fragments %>% 
+    dplyr::filter(country != "Other") %>% 
+    count(country) %>% 
+    select(n)
+
+map_dataframe <- survey_fragments %>% 
+    dplyr::filter(country != "Other") %>% 
+    select(country, parents.legal.online) %>% 
+    group_by(country) %>% 
+    mutate(parents.legal.online = ifelse(parents.legal.online == "Yes", 1, 0)) %>% 
+    summarise(mean_legal = mean(parents.legal.online, na.rm = TRUE)) %>% 
+    bind_cols(only_counts_responses) %>% 
+    arrange(desc(n))
+
+map_dataframe %>% 
+    mutate(country = fct_reorder(as.factor(country), n)) %>% 
+    ggplot(aes(x = country, y = mean_legal)) +
+    geom_col() +
+    labs(title = "Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?") +
+    coord_flip()
+```
+
+
+```{r echo=FALSE, All questions separated by LimeSurvey}
 
 "Gender"
 "What is your age?"
@@ -281,84 +355,5 @@ prop.table(table(survey_data$"When do you need to obtain Informed consent for el
 "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
-```
-
-
-### Graph ..: What are your major concerns about online or telephone interviews?
-```{r}
-reasons_against <- survey_fragments %>% 
-    select(c("lack of contact", 
-             "impossible to observe behavior", 
-             "no relation", 
-            "no confidence", 
-            "legal requirenments", 
-            "unsure if illigal")) %>%
-    apply(MARGIN = 2, table) %>% 
-    as_tibble()
-
-
-gather(reasons_against[2,]) %>% 
-    mutate(key = fct_reorder(as.factor(key), value)) %>% 
-    ggplot(aes(x = key, y = value, fill = key)) +
-        geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What are your major concerns about online or telephone interviews?") +
-        theme_light(base_size = 15) + 
-        theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") +
-        coord_flip()
-```
-
-
-
-### Graph ..: What are your major concerns about online or telephone interviews?
-```{r}
-reasons_for <- survey_fragments %>% 
-    select(c("Less stressful",                  
-             "Less waiting",                    
-             "Standardized questionaires",      
-             "More efficient than face-to-face")) %>%
-    apply(MARGIN = 2, table) %>% 
-    as_tibble()
-
-
-gather(reasons_for[2,]) %>% 
-    mutate(key = fct_reorder(as.factor(key), value)) %>% 
-    ggplot(aes(x = key, y = value, fill = key)) +
-        geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What could be a major advantage of online/telephone interviews?") +
-        theme_light(base_size = 15) + 
-        theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") +
-        coord_flip()
-```
-
-### Map
-```{r}
-library(grid)
-library(rworldmap)
-
-only_counts_responses <- survey_fragments %>% 
-    dplyr::filter(country != "Other") %>% 
-    count(country) %>% 
-    select(n)
-
-survey_fragments %>% 
-    dplyr::filter(country != "Other") %>% 
-    select(country, parents.legal.online) %>% 
-    group_by(country) %>% 
-    mutate(parents.legal.online = ifelse(parents.legal.online == "Yes", 1, 0)) %>% 
-    summarise(mean_legal = mean(parents.legal.online, na.rm = TRUE)) %>% 
-    bind_cols(only_counts_responses) %>% 
-    arrange(desc(n))
-
-
-    mutate(country = fct_reorder(as.factor(country), mean_legal)) %>% 
-    ggplot(aes(x = country, y = mean_legal)) +
-    geom_bar(stat="identity") +
-    coord_flip()
 ```
 
