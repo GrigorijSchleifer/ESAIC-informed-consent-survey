@@ -95,35 +95,37 @@ pie(when_complex,
     col = cols,
     main = "complex procedures")
 ```
+```{r Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?}
+# prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
+online_legal_ped_answers <- c("Different",
+                        "No",
+                        "Yes")
 
-```{r}
-# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for complex procedures, higher risk patients)"))
-online_legal_complex <- round(c(0.3877805, 0.4251870, 0.1870324), 2) * 100
-pie(online_legal_complex,
-    labels = paste0(online_legal_complex, "%"), 
+online_legal_ped <- round(c(0.09813084, 0.67289720, 0.22897196), 2) * 100
+
+pie(online_legal_ped,
+    labels = paste0(online_legal_ped, "%"), 
     clockwise = TRUE,
     cex = 1.5,
-    col = cols,
-    main = "complex procedures")
+    col = cols)
 
+legend("bottomleft", 
+       legend = online_legal_ped_answers,
+       fill = cols)
 
-
-pie(prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?")))
 
 
 
 
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
-
-
-prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
-prop.table(table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"))
 ```
 
 
-```{r}
+```{r Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?}
+prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
+
 ### online legal simple vs complex
 online_eccordance_simple <- c("I don't know", 
                               "No", 
@@ -132,6 +134,32 @@ cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
 par(mfrow = c(1, 2))
 
 # prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+
+
+online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
+pie(online_legal_simple,
+    labels = paste0(online_legal_simple, "%"), 
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "simple procedures")
+legend("bottom", 
+       legend = online_eccordance_simple,
+       fill = cols)
+```
+
+
+```{r Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"}
+### online legal simple vs complex
+online_eccordance_simple <- c("I don't know", 
+                              "No", 
+                              "Yes")
+cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
+par(mfrow = c(1, 2))
+
+# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
+
+
 online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
 pie(online_legal_simple,
     labels = paste0(online_legal_simple, "%"), 
