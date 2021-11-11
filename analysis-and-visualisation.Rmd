@@ -236,30 +236,42 @@ only_counts_responses <- survey_fragments %>%
     count(country) %>% 
     select(n)
 
+# getting the countries in R
 mapdata <- map_data("world")
 
+# 
 map_dataframe <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
     select(country, parents.legal.online) %>% 
     group_by(country) %>% 
     mutate(parents.legal.online = ifelse(parents.legal.online == "Yes", 1, 0)) %>% 
-    summarise(mean_legal = mean(parents.legal.online, na.rm = TRUE)) %>% 
+    summarise(mean_legal = (mean(parents.legal.online, na.rm = TRUE)) *100 ) %>% 
     bind_cols(only_counts_responses) %>%
-    dplyr::filter(n > 10) %>% 
-    arrange(desc(n)) %>% 
-    print(n = 30)
+    dplyr::filter(n > 15) %>% 
+    arrange(desc(n))
 
 # changing column names, so mapdata and map_dataframe can be combined
-colnames(map_dataframe) <- c("region", "mean_legal","n")
+colnames(map_dataframe) <- c("region", "mean_legal", "n")
+
+# changing UK name so in can fit to mapdata
 map_dataframe$region[map_dataframe$region == "United Kingdom (UK)"] <- "UK" 
-print(map_dataframe, n = 30)
 
 #combining both dataframes
 map_data <- left_join(mapdata, map_dataframe, by = "region")
+
 # filtering NA and all the countries not included in the ESAIC survey
 map_data %>% 
-    dplyr::filter(!is.na(mean_legal))
-
+    dplyr::filter(!is.na(mean_legal)) %>% 
+    ggplot(aes(x = long, y = lat, group = group)) +
+    geom_polygon(aes(fill = mean_legal), color = "black") +
+    scale_fill_gradient(name = "% Online consent is legal") +
+    theme(axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title.y=element_blank(),
+          axis.title.x=element_blank(),
+          rect = element_blank())
+    
 
 # Countries where online consent was stated to be legal
 map_dataframe %>% 
@@ -340,4 +352,41 @@ map_dataframe %>%
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
 ```
+
+```{r countries for later}
+countries <-
+    c(
+        "Austria",
+        "Belgium",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Italy",
+        "Latvia",
+        "Lithuania",
+        "Luxembourg",
+        "Malta",
+        "Netherlands",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "UK",
+        "Turkey"
+    )
+```
+
 
