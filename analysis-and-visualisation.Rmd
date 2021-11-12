@@ -69,6 +69,11 @@ survey_data_barchart <- survey_data %>%
 
 colnames(survey_data_barchart) <- c("country", "expert.level")
 
+# changing UK name so in can fit to mapdata
+survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK)"] <- "UK" 
+survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
+survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
+
 # would be nice to order in dechending order and filled with expert level
 survey_data_barchart %>%
     dplyr::filter(!is.na(expert.level)) %>% 
@@ -87,21 +92,31 @@ survey_data_barchart %>%
     geom_bar(stat ="identity") +
     coord_flip() 
 
-
-# !!!
+# stacked responses base on country
 survey_data_barchart %>%
     dplyr::filter(!is.na(expert.level)) %>% 
     dplyr::filter(!is.na(country)) %>% 
     group_by(expert.level) %>% 
-    count(country, sort = TRUE) %>%
-    mutate(country = fct_reorder(country, n)) %>% 
-    ggplot(aes(x = reorder(country, +n), n, fill = expert.level)) +
-    geom_bar(stat ="identity") +
+    count(country) %>%
+    # mutate(country = fct_reorder(country, n)) %>% 
+    ggplot(aes(x = reorder(country, +n, FUN = sum), n, fill = expert.level)) +
+    geom_bar(stat = "identity") +
     coord_flip() +
-    theme(legend.position="top") +
+    theme(legend.position="top",
+          axis.text.x = element_text(size = 20, vjust = 1.3),
+          axis.text.y = element_text(size = 15),
+          legend.title = element_blank(),
+          axis.ticks = element_blank(),
+          # axis.title.y = element_blank(),
+          # axis.title.x = element_blank(),
+          rect = element_blank(),
+          legend.text = element_text(size=25),
+          axis.title.x = element_text(size=20, vjust = 0.5)) +
     guides(fill = guide_legend("")) +
     labs(x = "",
-         y = "Responses")
+         y = "Responses") +
+    scale_fill_brewer(palette = "Set1")
+    #scale_x_discrete(guide = guide_axis(n.dodge = 2))
 ```
 
 
