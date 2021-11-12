@@ -253,21 +253,23 @@ id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
                              dilemma = factor(c(rep("ID should be controlled", 3), rep("Actually controlled", 3)),
                                               levels = c("ID should be controlled", "Actually controlled")),
                              # percents for labeling the bars
-                             prop_values = round(c(0.07596899, 0.36279070, 0.56124031, 0.04496124, 0.65581395, 0.29922481) * 100))
-
-
+                             prop_values = round((c(0.07596899, 0.36279070, 0.56124031, 0.04496124, 0.65581395, 0.29922481) * 100), 1))
 
 id_dilemma_tbl %>%
     ggplot(aes(x = dilemma, y = Values, fill = Answer), position = "fill") +
     geom_col() +
     scale_fill_brewer(palette = "Set3") + 
-    theme(# axis.text.x = element_blank(),
+    theme(axis.text.x = element_text(size = 20),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
           axis.title.y = element_blank(),
           axis.title.x = element_blank(),
-          rect = element_blank()) + 
-    geom_text(aes(label = prop_values, y = Values), size = 3, position = position_stack(vjust = 0.5))
+          rect = element_blank(),
+          legend.text = element_text(size=15),
+          legend.title = element_blank(),
+          legend.position = "left") + 
+    geom_text(aes(label = paste0(prop_values, " %"), y = Values), size = 5, position = position_stack(vjust = 0.5)) +
+    scale_x_discrete(position = "top") 
 ```
 
 
