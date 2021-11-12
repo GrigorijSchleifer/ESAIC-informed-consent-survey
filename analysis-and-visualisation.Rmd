@@ -223,27 +223,20 @@ map_data <- left_join(mapdata, map_dataframe, by = "region")
 # filtering NA and all the countries not included in the ESAIC survey
 map_data %>% 
     dplyr::filter(!is.na(mean_legal)) %>% 
-    ggplot(aes(x = long, y = lat, group = group)) +
-    geom_polygon(aes(fill = mean_legal), color = "black") +
+    ggplot(aes(x = long, 
+               y = lat, 
+               group = group)) +
+    geom_polygon(aes(fill = mean_legal), 
+                 color = "black") +
     scale_fill_gradient(name = "% Online consent is legal") +
     theme(axis.text.x = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
-          axis.title.y=element_blank(),
+          axis.title.y = element_blank(),
           axis.title.x=element_blank(),
           legend.text = element_text(size = 20),
           legend.title = element_text(size = 25),
           rect = element_blank())
-
-theme(axis.text.x = element_text(size = 30),
-          axis.text.y = element_blank(),
-          axis.ticks = element_blank(),
-          axis.title.y = element_blank(),
-          axis.title.x = element_blank(),
-          rect = element_blank(),
-          legend.text = element_text(size=15),
-          legend.title = element_blank(),
-          legend.position = "left")
 
 # Countries where online consent was stated to be legal
 map_dataframe %>% 
@@ -341,6 +334,12 @@ reasons_against <- survey_fragments %>%
     apply(MARGIN = 2, table) %>% 
     as_tibble()
 
+colnames(reasons_against) <- c("Lack of contact", 
+                               "Impossible to observe behavior", 
+                               "No relationship",
+                               "No confidence", 
+                               "Legal requirenments", 
+                               "Unsure if illigal")
 # absolute numbers
 reasons_against[2,]
 # proportions 
@@ -350,12 +349,17 @@ gather(reasons_against[2,]) %>%
     mutate(key = fct_reorder(as.factor(key), value)) %>% 
     ggplot(aes(x = key, y = value, fill = key)) +
         geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What are your major concerns about online or telephone interviews?") +
-        theme_light(base_size = 15) + 
+        theme(axis.text.x = element_text(size = 20),
+              axis.text.y = element_text(size = 30),
+              axis.ticks = element_blank(),
+              axis.title.y = element_blank(),
+              axis.title.x = element_text(size = 20),
+              rect = element_blank(),
+              legend.title = element_blank()) + 
         theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") +
+        scale_fill_brewer(palette = "Set1") +
+    labs(x = "",
+         y = "Responses") +
         coord_flip()
 ```
 ```{r Plot ...: What could be a major advantage of online/telephone interviews?}
@@ -376,12 +380,16 @@ gather(reasons_for[2,]) %>%
     mutate(key = fct_reorder(as.factor(key), value)) %>% 
     ggplot(aes(x = key, y = value, fill = key)) +
         geom_col() +
-        labs(x = "", 
-        y = "", 
-        title = "What could be a major advantage of online/telephone interviews?") +
         theme_light(base_size = 15) + 
+        theme(axis.text.x = element_text(size = 20),
+              axis.text.y = element_text(size = 30),
+              axis.ticks = element_blank(),
+              axis.title.y = element_blank(),
+              axis.title.x = element_text(size = 20),
+              rect = element_blank(),
+              legend.title = element_blank()) + 
         theme(legend.position = "None") +
-        scale_fill_brewer(palette = "Set3") +
+        scale_fill_brewer(palette = "Set1") +
         coord_flip()
 ```
 
