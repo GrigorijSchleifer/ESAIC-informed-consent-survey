@@ -63,7 +63,7 @@ results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = 
 #            row.names = TRUE, 
 #            append = TRUE)
 ```
-```{r Specialty distribution separated by country}
+```{r Plot Specialty distribution separated by country}
 survey_data_barchart <- survey_data %>% 
     select(c("Country where you work?", "Your expert level"))
 
@@ -127,30 +127,41 @@ when_obtain_simple_complex <- c("2 days or more",
                         "24h or less",
                         "Same day")
 
-cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set3')
+when_simple <- round(c(0.1289111, 0.3516896, 0.1902378, 0.3291615), digits = 2) * 100
+when_complex <- round(c(0.33625, 0.30500, 0.21125, 0.14750), digits = 2) * 100
+
+cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
 par(mfrow = c(1, 2))
 
 # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
-when_simple <- round(c(0.1289111, 0.3516896, 0.1902378, 0.3291615), digits = 2) * 100
 pie(when_simple, 
     labels = paste0(when_simple, "%"),
     clockwise = TRUE,
     col = cols,
-    cex = 1.5,
-    main = "simple procedures")
+    cex.main=3, 
+    cex = 2.5,
+    main = "simple procedures",
+    radius = 1.2,
+    border = "white")
 
-legend("bottomleft", 
+legend("bottom", 
        legend = when_obtain_simple_complex,
-       fill = cols)
+       fill = cols,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
 
 # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
-when_complex <- round(c(0.33625, 0.30500, 0.21125, 0.14750), digits = 2) * 100
 pie(when_complex,
     labels = paste0(when_complex, "%"),
     clockwise = TRUE,
-    cex = 1.5,
+    cex.main=3, 
+    cex = 2.5,
     col = cols,
-    main = "complex procedures")
+    main = "complex procedures",
+    radius = 1.2,
+    border = "white")
 ```
 ```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
@@ -212,9 +223,19 @@ map_data %>%
           axis.ticks = element_blank(),
           axis.title.y=element_blank(),
           axis.title.x=element_blank(),
+          legend.text = element_text(size = 20),
+          legend.title = element_text(size = 25),
           rect = element_blank())
 
-    
+theme(axis.text.x = element_text(size = 30),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          rect = element_blank(),
+          legend.text = element_text(size=15),
+          legend.title = element_blank(),
+          legend.position = "left")
 
 # Countries where online consent was stated to be legal
 map_dataframe %>% 
