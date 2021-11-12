@@ -5,9 +5,11 @@ output: html_document
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
 ```{r libraries}
 library(tableone)
 library(RColorBrewer)
+library(scales)
 
 # library(ReporteRs)
 # library(magrittr)
@@ -93,7 +95,7 @@ survey_data_barchart %>%
     group_by(expert.level) %>% 
     count(country, sort = TRUE) %>%
     mutate(country = fct_reorder(country, n)) %>% 
-    ggplot(aes(x = reorder(country, n), n, fill = expert.level)) +
+    ggplot(aes(x = reorder(country, +n), n, fill = expert.level)) +
     geom_bar(stat ="identity") +
     coord_flip() +
     theme(legend.position="top") +
@@ -104,7 +106,7 @@ survey_data_barchart %>%
 
 
 ### Results
-```{r When do you need to obtain Informed consent for elective surgery based on legal requirements?}
+```{r PIE When do you need to obtain Informed consent for elective surgery based on legal requirements?}
 when_obtain_simple_complex <- c("2 days or more",
                         "24h prior surgery",
                         "24h or less",
@@ -135,7 +137,7 @@ pie(when_complex,
     col = cols,
     main = "complex procedures")
 ```
-```{r Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
+```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
 online_legal_ped_answers <- c("Different",
@@ -207,7 +209,7 @@ map_dataframe %>%
     labs(title = "Proportion ") +
     coord_flip()
 ```
-```{r "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one?"}
+```{r PIE Do you need to obtain written Informed consent for elective surgery from both parents or just from one?}
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
 
 consent_parents_simple_answers <- c("Both parents",
@@ -224,10 +226,11 @@ pie(consent_parents_simple,
     clockwise = TRUE,
     col = cols,
     cex = 1.5,
-    main = "simple procedures")s
+    main = "simple procedures")
 
 legend("bottomleft", 
-       legend = when_obtain_simple_complex,
+       inset = -0.1,
+       legend = consent_parents_simple_answers,
        fill = cols)
 
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
@@ -239,6 +242,32 @@ pie(consent_parents_complex,
     cex = 1.5,
     col = cols,
     main = "complex procedures")
+```
+```{r BARCHART ID dilemma}
+table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
+table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)")
+
+id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
+                             Answer = rep(c("Different", "No", "Yes"), 2),
+                             # prevent geom_col to order bars alphabetically
+                             dilemma = factor(c(rep("ID should be controlled", 3), rep("Actually controlled", 3)),
+                                              levels = c("ID should be controlled", "Actually controlled")),
+                             # percents for labeling the bars
+                             prop_values = round(c(0.07596899, 0.36279070, 0.56124031, 0.04496124, 0.65581395, 0.29922481) * 100))
+
+
+
+id_dilemma_tbl %>%
+    ggplot(aes(x = dilemma, y = Values, fill = Answer), position = "fill") +
+    geom_col() +
+    scale_fill_brewer(palette = "Set3") + 
+    theme(# axis.text.x = element_blank(),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank(),
+          rect = element_blank()) + 
+    geom_text(aes(label = prop_values, y = Values), size = 3, position = position_stack(vjust = 0.5))
 ```
 
 
@@ -303,6 +332,9 @@ gather(reasons_for[2,]) %>%
 
 
 
+
+
+
 ```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
 
 prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"))
@@ -310,8 +342,64 @@ prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming 
 
 ```
 
+```{r Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"}
+### online legal simple vs complex
+online_eccordance_simple <- c("I don't know", 
+                              "No", 
+                              "Yes")
+cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
+par(mfrow = c(1, 2))
+
+# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
 
 
+online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
+pie(online_legal_simple,
+    labels = paste0(online_legal_simple, "%"), 
+    clockwise = TRUE,
+    cex = 1.5,
+    col = cols,
+    main = "simple procedures")
+legend("bottom", 
+       legend = online_eccordance_simple,
+       fill = cols)
+```
+
+```{r countries for later}
+countries <-
+    c(
+        "Austria",
+        "Belgium",
+        "Bulgaria",
+        "Croatia",
+        "Cyprus",
+        "Czech Republic",
+        "Denmark",
+        "Estonia",
+        "Finland",
+        "France",
+        "Germany",
+        "Greece",
+        "Hungary",
+        "Ireland",
+        "Italy",
+        "Latvia",
+        "Lithuania",
+        "Luxembourg",
+        "Malta",
+        "Netherlands",
+        "Poland",
+        "Portugal",
+        "Romania",
+        "Slovakia",
+        "Slovenia",
+        "Spain",
+        "Sweden",
+        "Switzerland",
+        "UK",
+        "Turkey"
+    )
+```
 ```{r All questions separated by LimeSurvey}
 
 "Gender"
@@ -380,65 +468,6 @@ prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming 
 "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
-```
-
-```{r Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"}
-### online legal simple vs complex
-online_eccordance_simple <- c("I don't know", 
-                              "No", 
-                              "Yes")
-cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
-par(mfrow = c(1, 2))
-
-# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-
-
-online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
-pie(online_legal_simple,
-    labels = paste0(online_legal_simple, "%"), 
-    clockwise = TRUE,
-    cex = 1.5,
-    col = cols,
-    main = "simple procedures")
-legend("bottom", 
-       legend = online_eccordance_simple,
-       fill = cols)
-```
-
-```{r countries for later}
-countries <-
-    c(
-        "Austria",
-        "Belgium",
-        "Bulgaria",
-        "Croatia",
-        "Cyprus",
-        "Czech Republic",
-        "Denmark",
-        "Estonia",
-        "Finland",
-        "France",
-        "Germany",
-        "Greece",
-        "Hungary",
-        "Ireland",
-        "Italy",
-        "Latvia",
-        "Lithuania",
-        "Luxembourg",
-        "Malta",
-        "Netherlands",
-        "Poland",
-        "Portugal",
-        "Romania",
-        "Slovakia",
-        "Slovenia",
-        "Spain",
-        "Sweden",
-        "Switzerland",
-        "UK",
-        "Turkey"
-    )
 ```
 
 
