@@ -172,15 +172,23 @@ online_legal_ped_answers <- c("Different",
 
 online_legal_ped <- round(c(0.09813084, 0.67289720, 0.22897196), 2) * 100
 
-pie(online_legal_ped,
-    labels = paste0(online_legal_ped, "%"), 
+pie(online_legal_ped, 
+    labels = paste0(online_legal_ped, "%"),
     clockwise = TRUE,
-    cex = 1.5,
-    col = cols)
+    col = cols,
+    cex.main=3, 
+    cex = 2.5,
+    main = "simple procedures",
+    radius = 0.8,
+    border = "white")
 
 legend("bottomleft", 
        legend = online_legal_ped_answers,
-       fill = cols)
+       fill = cols,
+       cex = 1.7, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
 ```
 ```{r MAP Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # counts of responses in different countries
@@ -247,37 +255,48 @@ map_dataframe %>%
 ```
 ```{r PIE Do you need to obtain written Informed consent for elective surgery from both parents or just from one?}
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
+prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
 
 consent_parents_simple_answers <- c("Both parents",
                             "Different",
                             "One, who is present")
 
-cols = brewer.pal(n = length(consent_parents_simple_answers), name = 'Set3')
+cols = brewer.pal(n = length(consent_parents_simple_answers), name = 'Set1')
 par(mfrow = c(1, 2))
 
 
 consent_parents_simple <- round(c(0.14219474, 0.08191654, 0.77588872), digits = 2) * 100
+
 pie(consent_parents_simple, 
     labels = paste0(consent_parents_simple, "%"),
     clockwise = TRUE,
     col = cols,
-    cex = 1.5,
-    main = "simple procedures")
+    cex.main=3, 
+    cex = 2.5,
+    main = "simple procedures",
+    radius = 1.2,
+    border = "white")
 
-legend("bottomleft", 
-       inset = -0.1,
+legend("bottom", 
        legend = consent_parents_simple_answers,
-       fill = cols)
+       fill = cols,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
 
-prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
 
 consent_parents_complex <- round(c(0.2569231, 0.1046154, 0.6384615), digits = 2) * 100
+
 pie(consent_parents_complex,
     labels = paste0(consent_parents_complex, "%"),
     clockwise = TRUE,
-    cex = 1.5,
+    cex.main=3, 
+    cex = 2.5,
     col = cols,
-    main = "complex procedures")
+    main = "complex procedures",
+    radius = 1.2,
+    border = "white")
 ```
 ```{r BARCHART ID dilemma}
 table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
