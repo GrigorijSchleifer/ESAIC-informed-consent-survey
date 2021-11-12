@@ -135,7 +135,7 @@ pie(when_complex,
     col = cols,
     main = "complex procedures")
 ```
-```{r Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?}
+```{r Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
 online_legal_ped_answers <- c("Different",
@@ -154,7 +154,7 @@ legend("bottomleft",
        legend = online_legal_ped_answers,
        fill = cols)
 ```
-```{r Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
+```{r MAP Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # counts of responses in different countries
 only_counts_responses <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
