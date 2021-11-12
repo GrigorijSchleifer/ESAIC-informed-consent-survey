@@ -259,7 +259,7 @@ id_dilemma_tbl %>%
     ggplot(aes(x = dilemma, y = Values, fill = Answer), position = "fill") +
     geom_col() +
     scale_fill_brewer(palette = "Set3") + 
-    theme(axis.text.x = element_text(size = 20),
+    theme(axis.text.x = element_text(size = 30),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
           axis.title.y = element_blank(),
@@ -271,9 +271,6 @@ id_dilemma_tbl %>%
     geom_text(aes(label = paste0(prop_values, " %"), y = Values), size = 5, position = position_stack(vjust = 0.5)) +
     scale_x_discrete(position = "top") 
 ```
-
-
-
 ```{r Plot ...: What are your major concerns about online or telephone interviews?}
 reasons_against <- survey_fragments %>% 
     select(c("lack of contact", 
@@ -328,8 +325,6 @@ gather(reasons_for[2,]) %>%
         scale_fill_brewer(palette = "Set3") +
         coord_flip()
 ```
-
-
 
 
 
