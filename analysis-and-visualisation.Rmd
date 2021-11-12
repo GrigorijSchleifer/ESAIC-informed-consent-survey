@@ -312,18 +312,22 @@ id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
 
 id_dilemma_tbl %>%
     ggplot(aes(x = dilemma, y = Values, fill = Answer), position = "fill") +
-    geom_col() +
-    scale_fill_brewer(palette = "Set3") + 
+    geom_col(colour="white") +
+    scale_fill_brewer(palette = "Set1") + 
     theme(axis.text.x = element_text(size = 30),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
           axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           rect = element_blank(),
-          legend.text = element_text(size=15),
+          legend.text = element_text(size=30),
           legend.title = element_blank(),
           legend.position = "left") + 
-    geom_text(aes(label = paste0(prop_values, " %"), y = Values), size = 5, position = position_stack(vjust = 0.5)) +
+    geom_text(aes(label = paste0(prop_values, " %"), 
+                  y = Values), 
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
     scale_x_discrete(position = "top") 
 ```
 ```{r Plot ...: What are your major concerns about online or telephone interviews?}
