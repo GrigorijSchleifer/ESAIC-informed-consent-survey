@@ -74,23 +74,16 @@ survey_data_barchart$country[survey_data_barchart$country == "United Kingdom (UK
 survey_data_barchart$country[survey_data_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
 survey_data_barchart$country[survey_data_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
 
-# would be nice to order in dechending order and filled with expert level
-survey_data_barchart %>%
-    dplyr::filter(!is.na(expert.level)) %>% 
-    arrange(desc(country)) %>% 
-    ggplot(aes(x = country, fill = expert.level)) +
-    geom_bar() +
-    coord_flip()
 
-# nice but no fill 
-survey_data_barchart %>%
-    dplyr::filter(!is.na(expert.level)) %>% 
-    dplyr::filter(!is.na(country)) %>% 
-    count(country, sort = TRUE) %>%
-    mutate(country = fct_reorder(country, n)) %>% 
-    ggplot(aes(x = country, n)) +
-    geom_bar(stat ="identity") +
-    coord_flip() 
+# # nice but no fill 
+# survey_data_barchart %>%
+#     dplyr::filter(!is.na(expert.level)) %>% 
+#     dplyr::filter(!is.na(country)) %>% 
+#     count(country, sort = TRUE) %>%
+#     mutate(country = fct_reorder(country, n)) %>% 
+#     ggplot(aes(x = country, n)) +
+#     geom_bar(stat ="identity") +
+#     coord_flip() 
 
 # stacked responses base on country
 survey_data_barchart %>%
@@ -358,8 +351,8 @@ gather(reasons_against[2,]) %>%
               legend.title = element_blank()) + 
         theme(legend.position = "None") +
         scale_fill_brewer(palette = "Set1") +
-    labs(x = "",
-         y = "Responses") +
+        labs(x = "",
+             y = "Responses") +
         coord_flip()
 ```
 ```{r Plot ...: What could be a major advantage of online/telephone interviews?}
@@ -380,7 +373,6 @@ gather(reasons_for[2,]) %>%
     mutate(key = fct_reorder(as.factor(key), value)) %>% 
     ggplot(aes(x = key, y = value, fill = key)) +
         geom_col() +
-        theme_light(base_size = 15) + 
         theme(axis.text.x = element_text(size = 20),
               axis.text.y = element_text(size = 30),
               axis.ticks = element_blank(),
@@ -390,9 +382,45 @@ gather(reasons_for[2,]) %>%
               legend.title = element_blank()) + 
         theme(legend.position = "None") +
         scale_fill_brewer(palette = "Set1") +
+        labs(x = "",
+         y = "Responses") +
         coord_flip()
 ```
+```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
+prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
 
+pandemic_adnustments <- data.frame(answer = c("I don´t know", 
+                                        "No", 
+                                        "Yes"),
+                             value =  round((c(.2518703, 0.5610973, 0.1870324) * 100), 1))
+
+
+pandemic_adnustments %>% 
+    ggplot(aes(x = "", y = value, fill = answer)) + 
+    geom_bar(width = 1, stat = "identity", color = "white") +
+    coord_polar("y", start = 0) + 
+    theme_void()
+```
+
+```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
+prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
+
+future_consent <- data.frame(answer = c("In person",
+                                        "Online via patient´s self assessment",
+                                        "Online via videoconference",
+                                        "Via telefone"),
+                             value =  round((c(0.77910053, 0.07539683, 0.11640212, 0.02910053) * 100), 1))
+
+
+future_consent %>% 
+    ggplot(aes(x = "", y = value, fill = answer)) + 
+    geom_bar(width = 1, stat = "identity", color = "white") +
+    coord_polar("y", start = 0) + 
+    theme_void()
+
+
+
+```
 
 
 
