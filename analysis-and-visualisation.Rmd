@@ -116,12 +116,11 @@ survey_data_barchart %>%
 ### Results
 ```{r PIE When do you need to obtain Informed consent for elective surgery based on legal requirements?}
 when_obtain_simple_complex <- c("2 days or more",
-                        "24h prior surgery",
                         "24h or less",
                         "Same day")
 
-when_simple <- round(c(0.1289111, 0.3516896, 0.1902378, 0.3291615), digits = 2) * 100
-when_complex <- round(c(0.33625, 0.30500, 0.21125, 0.14750), digits = 2) * 100
+when_simple <- round(c(0.1289111, 0.5419274, 0.3291615), digits = 2) * 100
+when_complex <- round(c(0.33625, 0.51625, 0.14750), digits = 2) * 100
 
 cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
 par(mfrow = c(1, 2))
@@ -171,7 +170,6 @@ pie(online_legal_ped,
     col = cols,
     cex.main=3, 
     cex = 2.5,
-    main = "simple procedures",
     radius = 0.8,
     border = "white")
 
@@ -260,13 +258,13 @@ pie(consent_parents_simple,
     cex.main=3, 
     cex = 2.5,
     main = "simple procedures",
-    radius = 1.2,
+    radius = 1.1,
     border = "white")
 
 legend("bottom", 
        legend = consent_parents_simple_answers,
        fill = cols,
-       cex = 1.5, 
+       cex = 1.7, 
        bty = "n",
        border = "white",
        inset = -.06)
@@ -281,7 +279,7 @@ pie(consent_parents_complex,
     cex = 2.5,
     col = cols,
     main = "complex procedures",
-    radius = 1.2,
+    radius = 1.1,
     border = "white")
 ```
 ```{r BARCHART ID dilemma}
@@ -386,6 +384,9 @@ gather(reasons_for[2,]) %>%
          y = "Responses") +
         coord_flip()
 ```
+
+
+
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
 prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
 
@@ -393,15 +394,7 @@ pandemic_adnustments <- data.frame(answer = c("I don´t know",
                                         "No", 
                                         "Yes"),
                              value =  round((c(.2518703, 0.5610973, 0.1870324) * 100), 1))
-
-
-pandemic_adnustments %>% 
-    ggplot(aes(x = "", y = value, fill = answer)) + 
-    geom_bar(width = 1, stat = "identity", color = "white") +
-    coord_polar("y", start = 0) + 
-    theme_void()
 ```
-
 ```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
 prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
 
@@ -410,15 +403,8 @@ future_consent <- data.frame(answer = c("In person",
                                         "Online via videoconference",
                                         "Via telefone"),
                              value =  round((c(0.77910053, 0.07539683, 0.11640212, 0.02910053) * 100), 1))
-
-
-future_consent %>% 
-    ggplot(aes(x = "", y = value, fill = answer)) + 
-    geom_bar(width = 1, stat = "identity", color = "white") +
-    coord_polar("y", start = 0) + 
-    theme_void()
-
-
+```
+```{r Technical ...}
 
 ```
 
