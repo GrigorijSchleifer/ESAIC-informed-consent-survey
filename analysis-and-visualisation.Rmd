@@ -406,7 +406,7 @@ pie(pandemic_adjustments_values,
     radius = 0.8,
     border = "white")
 
-legend("left", 
+legend("bottomleft", 
        legend = pandemic_adnustments,
        fill = cols,
        cex = 1.5, 
