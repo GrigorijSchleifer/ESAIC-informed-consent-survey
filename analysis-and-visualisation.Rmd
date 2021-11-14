@@ -319,24 +319,21 @@ reasons_against <- survey_fragments %>%
     select(c("lack of contact", 
              "impossible to observe behavior", 
              "no relation", 
-            "no confidence", 
-            "legal requirenments", 
-            "unsure if illigal")) %>%
+            "no confidence")) %>%
     apply(MARGIN = 2, table) %>% 
     as_tibble()
 
 colnames(reasons_against) <- c("Lack of contact", 
-                               "Impossible to observe behavior", 
+                               "No personal observation", 
                                "No relationship",
-                               "No confidence", 
-                               "Legal requirenments", 
-                               "Unsure if illigal")
+                               "No confidence")
 # absolute numbers
 reasons_against[2,]
-# proportions 
-prop.table(reasons_against[2,]) * 100
 
-gather(reasons_against[2,]) %>% 
+# proportions 
+prop_conserns <- gather(prop.table(reasons_against[2,]) * 100)
+
+prop_conserns %>% 
     mutate(key = fct_reorder(as.factor(key), value)) %>% 
     ggplot(aes(x = key, y = value, fill = key)) +
         geom_col() +
@@ -346,7 +343,8 @@ gather(reasons_against[2,]) %>%
               axis.title.y = element_blank(),
               axis.title.x = element_text(size = 20),
               rect = element_blank(),
-              legend.title = element_blank()) + 
+              legend.position = "none") + 
+        scale_y_continuous(labels = function(x) paste0(x, "%"))
         theme(legend.position = "None") +
         scale_fill_brewer(palette = "Set1") +
         labs(x = "",
@@ -384,7 +382,6 @@ gather(reasons_for[2,]) %>%
          y = "Responses") +
         coord_flip()
 ```
-
 
 
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
