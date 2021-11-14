@@ -406,7 +406,7 @@ pie(pandemic_adjustments_values,
     radius = 0.8,
     border = "white")
 
-legend("bottom", 
+legend("left", 
        legend = pandemic_adnustments,
        fill = cols,
        cex = 1.5, 
@@ -418,6 +418,7 @@ legend("bottom",
 # prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
 
 # cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set2')
+colors = c("red", "yellow", "green", "violet")
 
 future_consent <- c("In person",
                     "Online via patient´s self assessment",
@@ -429,7 +430,7 @@ future_consent_value =  round(c(0.77910053, 0.07539683, 0.11640212, 0.02910053),
 pie(future_consent_value, 
     labels = paste0(future_consent_value, "%"),
     clockwise = TRUE,
-    col = cols,
+    col = colors,
     cex.main=3, 
     cex = 2.5,
     radius = 0.8,
@@ -437,14 +438,36 @@ pie(future_consent_value,
 
 legend("bottom", 
        legend = future_consent,
-       fill = cols,
+       fill = colors,
        cex = 1.5, 
        bty = "n",
        border = "white",
        inset = -.06)
 ```
-```{r Technical ...}
+```{r Technical implementation}
+prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
 
+colors = c("red", "yellow", "blue")
+technical_possible <- c("Different", "No", "Yes")
+technical_possible_values <- round(c(0.06647399, 0.70231214, 0.23121387), 2) * 100
+
+
+pie(technical_possible_values, 
+    labels = paste0(technical_possible_values, "%"),
+    clockwise = TRUE,
+    col = colors,
+    cex.main=3, 
+    cex = 2.5,
+    radius = 0.8,
+    border = "white")
+
+legend("bottomleft", 
+       legend = technical_possible,
+       fill = colors,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
 ```
 
 
