@@ -319,29 +319,33 @@ reasons_against <- survey_fragments %>%
     select(c("lack of contact", 
              "impossible to observe behavior", 
              "no relation", 
-            "no confidence")) %>%
+            "no confidence",
+            "legal requirenments",
+            "unsure if illigal")) %>%
     apply(MARGIN = 2, table) %>% 
     as_tibble()
 
 colnames(reasons_against) <- c("Lack of contact", 
-                               "No personal observation", 
+                               "Can't observe behavior", 
                                "No relationship",
-                               "No confidence")
+                               "No confidence", 
+                               "Legal requirenments", 
+                               "Unsure if illigal")
 # absolute numbers
 reasons_against[2,]
 
 # proportions 
-prop_conserns <- gather(prop.table(reasons_against[2,]) * 100)
+prop_conserns <- gather(prop.table(reasons_against[2,]) * 100)  
 
 prop_conserns %>% 
-    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+    mutate(key = fct_reorder(as.factor(key), -value)) %>% 
     ggplot(aes(x = key, y = value, fill = key)) +
         geom_col() +
-        theme(axis.text.x = element_text(size = 20),
+        theme(axis.text.x = element_text(size = 15),
               axis.text.y = element_text(size = 30),
               axis.ticks = element_blank(),
               axis.title.y = element_blank(),
-              axis.title.x = element_text(size = 20),
+              axis.title.x = element_blank(),
               rect = element_blank(),
               legend.position = "none") + 
         scale_y_continuous(labels = function(x) paste0(x, "%"))
