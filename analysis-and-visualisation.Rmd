@@ -158,6 +158,8 @@ pie(when_complex,
 ```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
+cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
+
 online_legal_ped_answers <- c("Different",
                         "No",
                         "Yes")
@@ -176,7 +178,7 @@ pie(online_legal_ped,
 legend("bottomleft", 
        legend = online_legal_ped_answers,
        fill = cols,
-       cex = 1.7, 
+       cex = 1.6, 
        bty = "n",
        border = "white",
        inset = -.06)
@@ -367,34 +369,52 @@ reasons_for <- survey_fragments %>%
 # absolute numbers
 reasons_for[2,]
 # proportions 
-prop.table(reasons_for[2,]) * 100
+prop_for <- gather(prop.table(reasons_for[2,]) * 100)
 
-gather(reasons_for[2,]) %>% 
-    mutate(key = fct_reorder(as.factor(key), value)) %>% 
+prop_for %>% 
+    mutate(key = fct_reorder(as.factor(key), -value)) %>% 
     ggplot(aes(x = key, y = value, fill = key)) +
         geom_col() +
-        theme(axis.text.x = element_text(size = 20),
+        theme(axis.text.x = element_text(size = 15),
               axis.text.y = element_text(size = 30),
               axis.ticks = element_blank(),
               axis.title.y = element_blank(),
-              axis.title.x = element_text(size = 20),
+              axis.title.x = element_blank(),
               rect = element_blank(),
-              legend.title = element_blank()) + 
+              legend.position = "none") + 
+        scale_y_continuous(labels = function(x) paste0(x, "%"))
         theme(legend.position = "None") +
         scale_fill_brewer(palette = "Set1") +
         labs(x = "",
-         y = "Responses") +
+             y = "Responses") +
         coord_flip()
 ```
 
 
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
-prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
+# prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
 
-pandemic_adnustments <- data.frame(answer = c("I don´t know", 
-                                        "No", 
-                                        "Yes"),
-                             value =  round((c(.2518703, 0.5610973, 0.1870324) * 100), 1))
+pandemic_adnustments <- c("I don´t know", "No", "Yes")
+pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
+
+
+
+pie(pandemic_adjustments_values, 
+    labels = paste0(pandemic_adjustments_values, "%"),
+    clockwise = TRUE,
+    col = cols,
+    cex.main=3, 
+    cex = 2.5,
+    radius = 0.8,
+    border = "white")
+
+legend("bottom", 
+       legend = pandemic_adnustments,
+       fill = cols,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
 ```
 ```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
 prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
