@@ -393,11 +393,9 @@ prop_for %>%
 
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
 # prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
-
+cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
 pandemic_adnustments <- c("I don´t know", "No", "Yes")
 pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
-
-
 
 pie(pandemic_adjustments_values, 
     labels = paste0(pandemic_adjustments_values, "%"),
@@ -417,13 +415,33 @@ legend("bottom",
        inset = -.06)
 ```
 ```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
-prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
+# prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
 
-future_consent <- data.frame(answer = c("In person",
-                                        "Online via patient´s self assessment",
-                                        "Online via videoconference",
-                                        "Via telefone"),
-                             value =  round((c(0.77910053, 0.07539683, 0.11640212, 0.02910053) * 100), 1))
+# cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set2')
+
+future_consent <- c("In person",
+                    "Online via patient´s self assessment",
+                    "Online via videoconference",
+                    "Via telefone")
+
+future_consent_value =  round(c(0.77910053, 0.07539683, 0.11640212, 0.02910053), 2) * 100
+
+pie(future_consent_value, 
+    labels = paste0(future_consent_value, "%"),
+    clockwise = TRUE,
+    col = cols,
+    cex.main=3, 
+    cex = 2.5,
+    radius = 0.8,
+    border = "white")
+
+legend("bottom", 
+       legend = future_consent,
+       fill = cols,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
 ```
 ```{r Technical ...}
 
