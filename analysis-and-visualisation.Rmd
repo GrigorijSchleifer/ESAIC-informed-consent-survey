@@ -477,7 +477,7 @@ legend("bottomleft",
 
 ```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
 
-prop.table(table(survey_data$"Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?"))
+prop.table(table(survey_data$`When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?`))
 
 
 ```
