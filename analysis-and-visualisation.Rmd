@@ -147,6 +147,9 @@ simple_df %>%
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
     facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
 
+
+
+################## base R pie ####################################
 # when_obtain_simple_complex <- c("2 days or more",
 #                         "24h or less",
 #                         "Same day")
