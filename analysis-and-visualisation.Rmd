@@ -111,7 +111,8 @@ survey_data_barchart %>%
     guides(fill = guide_legend("")) +
     labs(x = "",
          y = "Responses") +
-    scale_fill_brewer(palette = "Set1")
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C", "#AF357E")) 
+     # scale_fill_brewer(palette = "Set1")
     #scale_x_discrete(guide = guide_axis(n.dodge = 2))
 ```
 
@@ -191,32 +192,44 @@ simple_df %>%
 #     border = "white")
 ```
 ```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
-# prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
+prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
-cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
+online_legal_ped_answers <- data.frame(answer = c("Different", "Yes", "No"),
+                                       counts = round(c(0.09813084, 0.22897196, 0.67289720), 3) * 100)
 
-online_legal_ped_answers <- c("Different",
-                        "No",
-                        "Yes")
+online_legal_ped_answers %>% 
+    ggplot(aes(x="", y=counts, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(counts, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm')) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 
-online_legal_ped <- round(c(0.09813084, 0.67289720, 0.22897196), 2) * 100
-
-pie(online_legal_ped, 
-    labels = paste0(online_legal_ped, "%"),
-    clockwise = TRUE,
-    col = cols,
-    cex.main=3, 
-    cex = 2.5,
-    radius = 0.8,
-    border = "white")
-
-legend("bottomleft", 
-       legend = online_legal_ped_answers,
-       fill = cols,
-       cex = 1.6, 
-       bty = "n",
-       border = "white",
-       inset = -.06)
+# pie(online_legal_ped, 
+#     labels = paste0(online_legal_ped, "%"),
+#     clockwise = TRUE,
+#     col = cols,
+#     cex.main=3, 
+#     cex = 2.5,
+#     radius = 0.8,
+#     border = "white")
+# 
+# legend("bottomleft", 
+#        legend = online_legal_ped_answers,
+#        fill = cols,
+#        cex = 1.6, 
+#        bty = "n",
+#        border = "white",
+#        inset = -.06)
 ```
 ```{r MAP Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 # counts of responses in different countries
