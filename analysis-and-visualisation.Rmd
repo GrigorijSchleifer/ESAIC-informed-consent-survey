@@ -389,6 +389,137 @@ id_dilemma_tbl %>%
               position = position_stack(vjust = 0.5)) +
     scale_x_discrete(position = "top") 
 ```
+```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
+# prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
+pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
+
+pie(pandemic_adjustments_values, 
+    labels = paste0(pandemic_adjustments_values, "%"),
+    clockwise = TRUE,
+    col = cols,
+    cex.main=3, 
+    cex = 2.5,
+    radius = 0.8,
+    border = "white")
+
+
+legend("bottom", 
+       legend = pandemic_adnustments,
+       fill = cols,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       horiz = TRUE,
+       y = 2)
+
+PieChart(pandemic_adjustments_values, hole = 0, values = "%", data = pandemic_adjustments_values, fill = 1:4, main = "")
+
+```
+```{r Technical implementation}
+prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
+
+colors = c("red", "yellow", "blue")
+technical_possible <- c("Different", "No", "Yes")
+technical_possible_values <- round(c(0.06647399, 0.70231214, 0.23121387), 2) * 100
+
+
+pie(technical_possible_values, 
+    labels = paste0(technical_possible_values, "%"),
+    clockwise = TRUE,
+    col = colors,
+    cex.main=3, 
+    cex = 2.5,
+    radius = 0.8,
+    border = "white")
+
+legend("bottomleft", 
+       legend = technical_possible,
+       fill = colors,
+       cex = 1.5, 
+       bty = "n",
+       border = "white",
+       inset = -.06)
+```
+```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
+prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
+prop.table(table(survey_data$"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"))
+
+
+
+# 24 h prior and 24 prior because of daily routine pooled together
+future_consent <- data.frame(answer = c("In person",
+                                       "Self assessment online",
+                                       "Videoconference",
+                                       "Telefone"), 
+                             counts = round(c(0.77910053, 0.07539683, 0.11640212, 0.02910053), 3) * 100)
+
+future_consent_ped <- data.frame(answer = c("Different", "No", "Yes"),
+                                 counts = round(c(0.0755814, 0.3226744, 0.6017442), 3) * 100)
+
+future_consent_plot <- future_consent %>% 
+    ggplot(aes(x="", y=counts, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(counts, "%")),
+              size = 4, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=25),
+          legend.spacing.x = unit(1, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
+
+future_consent_ped_plot <- future_consent_ped %>% 
+    ggplot(aes(x="", y=counts, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(counts, "%")),
+              size = 4, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=25),
+          legend.spacing.x = unit(1, 'cm')) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
+    # facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
+                        
+
+ggarrange(future_consent_plot, future_consent_ped_plot, 
+                    labels = c("A", "B"),
+                    nrow = 2)
+
+# future_consent <- c("In person",
+#                     "Online via patient´s self assessment",
+#                     "Online via videoconference",
+#                     "Via telefone")
+# # future_consent_value =  round(c(0.77910053, 0.07539683, 0.11640212, 0.02910053), 2) * 100
+# 
+# pie(future_consent_value, 
+#     labels = paste0(future_consent_value, "%"),
+#     clockwise = TRUE,
+#     col = colors,
+#     cex.main=3, 
+#     cex = 2.5,
+#     radius = 0.8,
+#     border = "white")
+# 
+# legend("bottom", 
+#        legend = future_consent,
+#        fill = colors,
+#        cex = 1.5, 
+#        bty = "n",
+#        border = "white",
+#        inset = -.06)
+```
 ```{r Table Questionaires items pediatric}
 Questionaire_items = c(
     "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
@@ -487,208 +618,11 @@ prop_for %>%
 
 
 
-```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
-# prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
-pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
-
-pie(pandemic_adjustments_values, 
-    labels = paste0(pandemic_adjustments_values, "%"),
-    clockwise = TRUE,
-    col = cols,
-    cex.main=3, 
-    cex = 2.5,
-    radius = 0.8,
-    border = "white")
-
-
-legend("bottom", 
-       legend = pandemic_adnustments,
-       fill = cols,
-       cex = 1.5, 
-       bty = "n",
-       border = "white",
-       horiz = TRUE,
-       y = 2)
-
-PieChart(pandemic_adjustments_values, hole = 0, values = "%", data = pandemic_adjustments_values, fill = 1:4, main = "")
-
-```
-```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
-prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
-prop.table(table(survey_data$"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"))
-
-
-
-# 24 h prior and 24 prior because of daily routine pooled together
-future_consent <- data.frame(answer = c("In person",
-                                       "Self assessment online",
-                                       "Videoconference",
-                                       "Telefone"), 
-                             counts = round(c(0.77910053, 0.07539683, 0.11640212, 0.02910053), 3) * 100)
-
-future_consent_ped <- data.frame(answer = c("Different", "No", "Yes"),
-                                 counts = round(c(0.0755814, 0.3226744, 0.6017442), 3) * 100)
-
-future_consent_plot <- future_consent %>% 
-    ggplot(aes(x="", y=counts, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(counts, "%")),
-              size = 4, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=25),
-          legend.spacing.x = unit(1, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
-
-future_consent_ped_plot <- future_consent_ped %>% 
-    ggplot(aes(x="", y=counts, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(counts, "%")),
-              size = 4, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=25),
-          legend.spacing.x = unit(1, 'cm')) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
-    # facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
-                        
-
-ggarrange(future_consent_plot, future_consent_ped_plot, 
-                    labels = c("A", "B"),
-                    nrow = 2)
-
-# future_consent <- c("In person",
-#                     "Online via patient´s self assessment",
-#                     "Online via videoconference",
-#                     "Via telefone")
-# # future_consent_value =  round(c(0.77910053, 0.07539683, 0.11640212, 0.02910053), 2) * 100
-# 
-# pie(future_consent_value, 
-#     labels = paste0(future_consent_value, "%"),
-#     clockwise = TRUE,
-#     col = colors,
-#     cex.main=3, 
-#     cex = 2.5,
-#     radius = 0.8,
-#     border = "white")
-# 
-# legend("bottom", 
-#        legend = future_consent,
-#        fill = colors,
-#        cex = 1.5, 
-#        bty = "n",
-#        border = "white",
-#        inset = -.06)
-```
-```{r Technical implementation}
-prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
-
-colors = c("red", "yellow", "blue")
-technical_possible <- c("Different", "No", "Yes")
-technical_possible_values <- round(c(0.06647399, 0.70231214, 0.23121387), 2) * 100
-
-
-pie(technical_possible_values, 
-    labels = paste0(technical_possible_values, "%"),
-    clockwise = TRUE,
-    col = colors,
-    cex.main=3, 
-    cex = 2.5,
-    radius = 0.8,
-    border = "white")
-
-legend("bottomleft", 
-       legend = technical_possible,
-       fill = colors,
-       cex = 1.5, 
-       bty = "n",
-       border = "white",
-       inset = -.06)
-```
 
 
 
 
 
-
-```{r Thinking of Re-Do / repeated anaesthesia assuming the patient is well informed. Would an online/telephone informed consent then be allowed for elective surgery due to legal requirements in your country?}
-
-prop.table(table(survey_data$`When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?`))
-
-
-```
-
-```{r Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"}
-### online legal simple vs complex
-online_eccordance_simple <- c("I don't know", 
-                              "No", 
-                              "Yes")
-cols = brewer.pal(n = length(online_eccordance_simple), name = 'Set3')
-par(mfrow = c(1, 2))
-
-# prop.table(table(survey_data$"Is an online/telephone informed consent for elective surgery in accordance with the legal requirements in your country? (for simple procedures, low risk patients)"))
-
-
-online_legal_simple <- round(c(0.3553616, 0.3715711, 0.2730673), 2) * 100
-pie(online_legal_simple,
-    labels = paste0(online_legal_simple, "%"), 
-    clockwise = TRUE,
-    cex = 1.5,
-    col = cols,
-    main = "simple procedures")
-legend("bottom", 
-       legend = online_eccordance_simple,
-       fill = cols)
-```
-
-```{r countries for later}
-countries <-
-    c(
-        "Austria",
-        "Belgium",
-        "Bulgaria",
-        "Croatia",
-        "Cyprus",
-        "Czech Republic",
-        "Denmark",
-        "Estonia",
-        "Finland",
-        "France",
-        "Germany",
-        "Greece",
-        "Hungary",
-        "Ireland",
-        "Italy",
-        "Latvia",
-        "Lithuania",
-        "Luxembourg",
-        "Malta",
-        "Netherlands",
-        "Poland",
-        "Portugal",
-        "Romania",
-        "Slovakia",
-        "Slovenia",
-        "Spain",
-        "Sweden",
-        "Switzerland",
-        "UK",
-        "Turkey"
-    )
-```
 ```{r All questions separated by LimeSurvey}
 
 "Gender"
