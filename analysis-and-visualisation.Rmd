@@ -11,7 +11,7 @@ library(tableone)
 library(RColorBrewer)
 library(scales)
 library(lessR)
-
+library(xlsx)
 
 
 # library(ReporteRs)
@@ -369,7 +369,8 @@ id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
 id_dilemma_tbl %>%
     ggplot(aes(x = dilemma, y = Values, fill = Answer), position = "fill") +
     geom_col(colour="white") +
-    scale_fill_brewer(palette = "Set1") + 
+    # scale_fill_brewer(palette = "Set1") + 
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
     theme(axis.text.x = element_text(size = 30),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
@@ -378,7 +379,8 @@ id_dilemma_tbl %>%
           rect = element_blank(),
           legend.text = element_text(size=30),
           legend.title = element_blank(),
-          legend.position = "left") + 
+          legend.position = "bottom",
+          legend.spacing.x = unit(1.5, 'cm')) + 
     geom_text(aes(label = paste0(prop_values, " %"), 
                   y = Values), 
               size = 10, 
@@ -386,6 +388,27 @@ id_dilemma_tbl %>%
               position = position_stack(vjust = 0.5)) +
     scale_x_discrete(position = "top") 
 ```
+```{r Table Questionaires items pediatric}
+Questionaire_items = c(
+    "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
+    "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?",
+    "Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?",
+    "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?", 
+    "In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)",
+    "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
+ 
+Questionaire_items <-
+    CreateTableOne(
+        data = survey,
+        vars = contVars_Questionaire_items,
+        # factorVars = factorVars,
+        addOverall = FALSE,
+        # strata =
+    )
+
+results_tbl <- print(Questionaire_items, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+```
+
 ```{r Plot ...: What are your major concerns about online or telephone interviews?}
 reasons_against <- survey_fragments %>% 
     select(c("lack of contact", 
@@ -459,6 +482,7 @@ prop_for %>%
              y = "Responses") +
         coord_flip()
 ```
+
 
 
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
@@ -682,7 +706,6 @@ countries <-
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
 ```
-
 
 ```{r pie experimentation}
 simple_df <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3)),
