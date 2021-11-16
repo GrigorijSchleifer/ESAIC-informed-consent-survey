@@ -438,32 +438,7 @@ regulations %>%
 
 
 ```
-```{r Technical implementation}
-prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
-
-colors = c("red", "yellow", "blue")
-technical_possible <- c("Different", "No", "Yes")
-technical_possible_values <- round(c(0.06647399, 0.70231214, 0.23121387), 2) * 100
-
-
-pie(technical_possible_values, 
-    labels = paste0(technical_possible_values, "%"),
-    clockwise = TRUE,
-    col = colors,
-    cex.main=3, 
-    cex = 2.5,
-    radius = 0.8,
-    border = "white")
-
-legend("bottomleft", 
-       legend = technical_possible,
-       fill = colors,
-       cex = 1.5, 
-       bty = "n",
-       border = "white",
-       inset = -.06)
-```
-```{r How would you prefer to do the anaesthesiological preoperative evaluation in the future?}
+```{r Future dilemma}
 prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
 prop.table(table(survey_data$"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"))
 
@@ -492,7 +467,8 @@ future_consent_plot <- future_consent %>%
           legend.title = element_blank(),
           legend.text = element_text(size=25),
           legend.spacing.x = unit(1, 'cm'),
-          strip.text.x = element_text(size=35)) +
+          strip.text.x = element_text(size=35),
+          plot.margin=unit(c(1,1,1.2,1), "cm")) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
@@ -509,16 +485,18 @@ future_consent_ped_plot <- future_consent_ped %>%
     theme(legend.position="bottom",
           legend.title = element_blank(),
           legend.text = element_text(size=25),
-          legend.spacing.x = unit(1, 'cm')) +
+          legend.spacing.x = unit(1, 'cm'),
+          plot.margin=unit(c(1.2,1,1,1), "cm")) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
     scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
     # facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
                         
 
-ggarrange(future_consent_plot, future_consent_ped_plot, 
-                    labels = c("A", "B"),
-                    nrow = 2)
+ggarrange(future_consent_plot, 
+          future_consent_ped_plot, 
+          labels = c("A", "B"),
+          nrow = 2)
 
 # future_consent <- c("In person",
 #                     "Online via patient´s self assessment",
@@ -543,6 +521,91 @@ ggarrange(future_consent_plot, future_consent_ped_plot,
 #        border = "white",
 #        inset = -.06)
 ```
+```{r Technical implementation}
+prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
+
+# 24 h prior and 24 prior because of daily routine pooled together
+technological <- data.frame(answer = c("Different", "No", "Yes"),
+                        when_simple = round(c(0.06647399, 0.70231214, 0.23121387), 2) * 100)
+
+
+
+technological %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+
+# 
+# 
+# pie(technical_possible_values, 
+#     labels = paste0(technical_possible_values, "%"),
+#     clockwise = TRUE,
+#     col = colors,
+#     cex.main=3, 
+#     cex = 2.5,
+#     radius = 0.8,
+#     border = "white")
+# 
+# legend("bottomleft", 
+#        legend = technical_possible,
+#        fill = colors,
+#        cex = 1.5, 
+#        bty = "n",
+#        border = "white",
+#        inset = -.06)
+```
+```{r Technical analysis countries}
+technical_barchart <- survey_data %>% 
+    select(c("Country where you work?", "Is it possible to obtain informed consent online via internet, in your routine setting?"))
+
+colnames(technical_barchart) <- c("country", "technical")
+
+# changing UK name so in can fit to mapdata
+technical_barchart$country[technical_barchart$country == "United Kingdom (UK)"] <- "UK" 
+technical_barchart$country[technical_barchart$country == "North Macedonia (formerly Macedonia)"] <- "Macedonia" 
+technical_barchart$country[technical_barchart$country == "Bosnia and Herzegovina"] <- "B&H" 
+
+# stacked responses base on country
+technical_barchart %>%
+    dplyr::filter(!is.na(country)) %>%
+    dplyr::filter(!is.na(technical)) %>%
+    dplyr::filter()
+    group_by(country) %>% 
+    
+    mutate(technical = fct_reorder(technical, )) %>% 
+    ggplot(aes(x = country, fill = technical)) +
+    geom_bar(position = "fill") +
+    coord_flip() + 
+    theme(legend.position="top",
+          axis.text.x = element_text(size = 20, vjust = 1.3),
+          axis.text.y = element_text(size = 15),
+          legend.title = element_blank(),
+          axis.ticks = element_blank(),
+          # axis.title.y = element_blank(),
+          # axis.title.x = element_blank(),
+          rect = element_blank(),
+          legend.text = element_text(size=25),
+          axis.title.x = element_text(size=20, vjust = 0.5)) +
+    guides(fill = guide_legend("")) +
+    labs(x = "") +
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C", "#AF357E")) 
+     # scale_fill_brewer(palette = "Set1")
+    #scale_x_discrete(guide = guide_axis(n.dodge = 2))
+```
+
 ```{r Table Questionaires items pediatric}
 Questionaire_items = c(
     "Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?",
