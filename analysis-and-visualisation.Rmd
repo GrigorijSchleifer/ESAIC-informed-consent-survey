@@ -390,29 +390,52 @@ id_dilemma_tbl %>%
     scale_x_discrete(position = "top") 
 ```
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
-# prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
-pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
+prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
 
-pie(pandemic_adjustments_values, 
-    labels = paste0(pandemic_adjustments_values, "%"),
-    clockwise = TRUE,
-    col = cols,
-    cex.main=3, 
-    cex = 2.5,
-    radius = 0.8,
-    border = "white")
+regulations <- data.frame(answer = c("I don´t know", "No", "Yes"),
+                          when_simple = round(c(0.2518703, 0.5610973, 0.1870324), digits = 3) * 100)
 
 
-legend("bottom", 
-       legend = pandemic_adnustments,
-       fill = cols,
-       cex = 1.5, 
-       bty = "n",
-       border = "white",
-       horiz = TRUE,
-       y = 2)
+# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
+regulations %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
 
-PieChart(pandemic_adjustments_values, hole = 0, values = "%", data = pandemic_adjustments_values, fill = 1:4, main = "")
+# pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
+# 
+# pie(pandemic_adjustments_values, 
+#     labels = paste0(pandemic_adjustments_values, "%"),
+#     clockwise = TRUE,
+#     col = cols,
+#     cex.main=3, 
+#     cex = 2.5,
+#     radius = 0.8,
+#     border = "white")
+# 
+# 
+# legend("bottom", 
+#        legend = pandemic_adnustments,
+#        fill = cols,
+#        cex = 1.5, 
+#        bty = "n",
+#        border = "white",
+#        horiz = TRUE,
+#        y = 2)
+
 
 ```
 ```{r Technical implementation}
