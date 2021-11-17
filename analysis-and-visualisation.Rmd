@@ -569,9 +569,23 @@ technological %>%
 ```
 ```{r Technical analysis countries}
 technical_barchart <- survey_data %>% 
-    select(c("Country where you work?", "Is it possible to obtain informed consent online via internet, in your routine setting?"))
-
+    select(c("Country where you work?", 
+             "Is it possible to obtain informed consent online via internet, in your routine setting?"))
+    
 colnames(technical_barchart) <- c("country", "technical")
+
+technical_barchart <- technical_barchart %>% 
+    dplyr::filter(technical != "Other") %>% 
+    group_by(country) %>% 
+    mutate(sum_responses = sum(n)) %>% 
+    dplyr::filter(technical == "Yes") %>% 
+    mutate(prop_yes = n/sum_responses,
+           prop_rest)
+    
+
+technical_barchart$country <- reorder(technical_barchart$country, 
+                                      technical_barchart$n , 
+                                      FUN=function(x) max(as.numeric(x)))
 
 # changing UK name so in can fit to mapdata
 technical_barchart$country[technical_barchart$country == "United Kingdom (UK)"] <- "UK" 
@@ -582,12 +596,9 @@ technical_barchart$country[technical_barchart$country == "Bosnia and Herzegovina
 technical_barchart %>%
     dplyr::filter(!is.na(country)) %>%
     dplyr::filter(!is.na(technical)) %>%
-    dplyr::filter()
     group_by(country) %>% 
-    
-    mutate(technical = fct_reorder(technical, )) %>% 
-    ggplot(aes(x = country, fill = technical)) +
-    geom_bar(position = "fill") +
+    ggplot(aes(x = country, n), fill = technical) +
+    geom_bar(position = "fill", stat = "identity") +
     coord_flip() + 
     theme(legend.position="top",
           axis.text.x = element_text(size = 20, vjust = 1.3),
