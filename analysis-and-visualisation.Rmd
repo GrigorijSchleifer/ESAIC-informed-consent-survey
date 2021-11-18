@@ -273,14 +273,14 @@ map_data %>%
                group = group)) +
     geom_polygon(aes(fill = mean_legal), 
                  color = "black") +
-    scale_fill_gradient(name = "% Online consent is legal") +
     theme(axis.text.x = element_blank(),
+          legend.position = "bottom",
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
           axis.title.y = element_blank(),
           axis.title.x = element_blank(),
           legend.text = element_text(size = 20),
-          legend.title = element_text(size = 25),
+          legend.title = element_blank(),
           rect = element_blank())
 
 # Countries where online consent was stated to be legal
