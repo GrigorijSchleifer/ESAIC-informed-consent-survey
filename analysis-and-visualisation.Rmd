@@ -275,11 +275,13 @@ map_data %>%
                  color = "black") +
     theme(axis.text.x = element_blank(),
           legend.position = "bottom",
+          legend.key.height= unit(1, 'cm'),
+          legend.key.width= unit(2, 'cm'),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
           axis.title.y = element_blank(),
           axis.title.x = element_blank(),
-          legend.text = element_text(size = 20),
+          legend.text = element_text(size = 15),
           legend.title = element_blank(),
           rect = element_blank())
 
@@ -567,7 +569,7 @@ technological %>%
 #        border = "white",
 #        inset = -.06)
 ```
-```{r Technical analysis countries}
+```{r MAP Technical analysis }
 technical_map <- survey_data %>% 
     select(c("Country where you work?", 
              "Is it possible to obtain informed consent online via internet, in your routine setting?"))
@@ -611,6 +613,8 @@ technical_map_joined %>%
     geom_polygon(aes(fill = mean_technical), 
                  color = "black") +
     theme(legend.position = "bottom",
+          legend.key.height= unit(1, 'cm'),
+          legend.key.width= unit(2, 'cm'),
           axis.text.x = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
