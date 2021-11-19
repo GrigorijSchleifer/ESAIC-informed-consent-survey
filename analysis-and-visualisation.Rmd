@@ -530,7 +530,7 @@ prop.table(table(survey_data$"Is it possible to obtain informed consent online v
 
 # 24 h prior and 24 prior because of daily routine pooled together
 technological <- data.frame(answer = c("Different", "No", "Yes"),
-                        when_simple = round(c(0.06647399, 0.70231214, 0.23121387), 2) * 100)
+                        when_simple = round(c(0.06647399, 0.70231214, 0.23121387), 3) * 100)
 
 
 
@@ -540,7 +540,7 @@ technological %>%
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
+              size = 8, 
               colour="white",
               position = position_stack(vjust = 0.5)) +
     theme(legend.position="bottom",
@@ -625,7 +625,7 @@ technical_map_joined %>%
           axis.title.y = element_blank(),
           axis.title.x=element_blank(),
           rect = element_blank()) +
-    scale_fill_gradient(low = "#919191", high = "#438C67") 
+    scale_fill_gradient(low = "#F5F5F5", high = "#438C67") 
 ```
 
 ```{r Table Questionaires items pediatric}
