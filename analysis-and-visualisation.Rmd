@@ -625,7 +625,7 @@ technical_map_joined %>%
           axis.title.y = element_blank(),
           axis.title.x=element_blank(),
           rect = element_blank()) +
-    scale_fill_gradient(low = "#919191", high = "#438C67")
+    scale_fill_gradient(low = "#919191", high = "#438C67") 
 ```
 
 ```{r Table Questionaires items pediatric}
