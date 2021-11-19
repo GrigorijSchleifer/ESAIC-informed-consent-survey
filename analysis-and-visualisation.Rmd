@@ -13,6 +13,8 @@ library(scales)
 library(lessR)
 library(xlsx)
 library(ggpubr)
+library(scales)
+
 
 
 # library(ReporteRs)
@@ -22,7 +24,7 @@ library(ggpubr)
 ```{r Data import and cleaning}
 survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
-survey_fragments <- read_csv("shiny_esaic/survey_fragments.csv")
+survey_fragments <- read_csv("survey_fragments.csv")
 # Responses eligible for analysis (country != "Other")
 table(survey_data_all_countries$`Country where you work?` == "Other")
 ```
@@ -615,14 +617,15 @@ technical_map_joined %>%
     theme(legend.position = "bottom",
           legend.key.height= unit(1, 'cm'),
           legend.key.width= unit(2, 'cm'),
+          legend.text = element_text(size = 12),
+          legend.title = element_blank(),
           axis.text.x = element_blank(),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
           axis.title.y = element_blank(),
           axis.title.x=element_blank(),
-          legend.text = element_text(size = 12),
-          legend.title = element_blank(),
-          rect = element_blank())
+          rect = element_blank()) +
+    scale_fill_gradient(low = "#919191", high = "#0E9989")
 ```
 
 ```{r Table Questionaires items pediatric}
