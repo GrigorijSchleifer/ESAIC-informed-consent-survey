@@ -499,7 +499,10 @@ future_consent_ped_plot <- future_consent_ped %>%
 
 ggarrange(future_consent_plot, 
           future_consent_ped_plot, 
-          labels = c("A", "B"),
+          labels = c("A:  How would you prefer to do the anaesthesiological preoperative evaluation in the future?", 
+                     "B:  When ensuring certain guidelines, would remote interview be an alternative to personal face-to-face meetings?"),
+          font.label = list(size = 23),
+          hjust = -0.02,
           nrow = 2)
 
 # future_consent <- c("In person",
