@@ -29,8 +29,10 @@ survey_fragments <- read_csv("survey_fragments.csv")
 
 ### Methods
 ```{r Profession distribution}
-profession_table <- table(survey_data$Profession)
-prop.table(profession_table)
+profession_table_nona <- table(survey_data$Profession, useNA = "no")
+profession_table_yesna <- table(survey_data$Profession)
+prop.table(profession_table_nona)
+prop.table(profession_table_yesna)
 ```
 ```{r Gender distribution}
 gender_table <- table(survey_data$Gender)
@@ -41,6 +43,7 @@ expertise_table <- table(survey_data$`Your expert level`)
 prop.table(expertise_table)
 ```
 ```{r Table 1: Profession and expert level distirbution stratified by gender}
+# https://cran.r-project.org/web/packages/table1/vignettes/table1-examples.html
 # stratification by gender
 catVars = "Gender"
 
@@ -53,12 +56,14 @@ tableOne <-
     CreateTableOne(
         data = survey_data,
         vars = contVars,
+        testExact = fisher.test,     
         addOverall = FALSE,
         strata = catVars
     )
 
-results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
 
+results_tbl <- print(tableOne, nonnormal = biomarkers, exact = "stage", quote = FALSE, noSpaces = FALSE, printToggle = FALSE)
+summary(tableOne)
 # writing the table to excel
 # write.xlsx(results_tbl,
 #            file = "~/Desktop/R/Shiny/ESAIC-survey/ESAIC-KAI-survey-2021/master_data.xlsx",
@@ -122,79 +127,6 @@ survey_data_barchart %>%
 
 
 ### Results
-```{r PIE When do you need to obtain Informed consent for elective surgery based on legal requirements?}
-prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
-prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
-
-# 24 h prior and 24 prior because of daily routine pooled together
-simple_df <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3)),
-                        answer = rep(c("2 days or more", "24h or less", "Same day"), 2),
-                        when_simple = round(c(0.1289111, 0.5419274, 0.3291615, 0.33625, 0.51625, 0.14750), digits = 3) * 100)
-
-
-# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
-simple_df %>% 
-    ggplot(aes(x="", y=when_simple, fill=answer)) +
-    geom_bar(stat="identity", width=1, color = "white") +
-    coord_polar("y", start=0) + 
-    theme_void() + 
-    geom_text(aes(label = paste0(when_simple, "%")),
-              size = 10, 
-              colour="white",
-              position = position_stack(vjust = 0.5)) +
-    theme(legend.position="bottom",
-          legend.title = element_blank(),
-          legend.text = element_text(size=30),
-          legend.spacing.x = unit(1.5, 'cm'),
-          strip.text.x = element_text(size=35)) +
-    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
-    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
-    facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
-
-
-
-################## base R pie ####################################
-# when_obtain_simple_complex <- c("2 days or more",
-#                         "24h or less",
-#                         "Same day")
-# 
-# when_simple <- round(c(0.1289111, 0.5419274, 0.3291615), digits = 2) * 100
-# when_complex <- round(c(0.33625, 0.51625, 0.14750), digits = 2) * 100
-# 
-# cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
-# par(mfrow = c(1, 2))
-# 
-# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
-# pie(when_simple, 
-#     labels = paste0(when_simple, "%"),
-#     clockwise = TRUE,
-#     col = cols,
-#     cex.main=3, 
-#     cex = 2.5,
-#     main = "simple procedures",
-#     radius = 1.2,
-#     border = "white")
-# 
-# legend("bottom", 
-#        legend = when_obtain_simple_complex,
-#        fill = cols,
-#        cex = 1.5, 
-#        bty = "n",
-#        border = "white",
-#        inset = -.06)
-# 
-# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
-# pie(when_complex,
-#     labels = paste0(when_complex, "%"),
-#     clockwise = TRUE,
-#     cex.main=3, 
-#     cex = 2.5,
-#     col = cols,
-#     main = "complex procedures",
-#     radius = 1.2,
-#     border = "white")
-```
 ```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
@@ -360,7 +292,10 @@ both_consent %>%
 ```
 ```{r BARCHART ID dilemma}
 table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
+prop.table(table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"))
+
 table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)")
+prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
 
 id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
                              Answer = rep(c("Different", "No", "Yes"), 2),
@@ -793,5 +728,78 @@ results_tbl <- print(Questionaire_items, nonnormal = biomarkers, exact = "stage"
 "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 "[Comment] Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"
 
+```
+```{r PIE When do you need to obtain Informed consent for elective surgery based on legal requirements?}
+prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
+prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
+
+# 24 h prior and 24 prior because of daily routine pooled together
+simple_df <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3)),
+                        answer = rep(c("2 days or more", "24h or less", "Same day"), 2),
+                        when_simple = round(c(0.1289111, 0.5419274, 0.3291615, 0.33625, 0.51625, 0.14750), digits = 3) * 100)
+
+
+# "#0073C2FF", "#EFC000FF", "#868686FF", "#CD534CFF"
+simple_df %>% 
+    ggplot(aes(x="", y=when_simple, fill=answer)) +
+    geom_bar(stat="identity", width=1, color = "white") +
+    coord_polar("y", start=0) + 
+    theme_void() + 
+    geom_text(aes(label = paste0(when_simple, "%")),
+              size = 10, 
+              colour="white",
+              position = position_stack(vjust = 0.5)) +
+    theme(legend.position="bottom",
+          legend.title = element_blank(),
+          legend.text = element_text(size=30),
+          legend.spacing.x = unit(1.5, 'cm'),
+          strip.text.x = element_text(size=35)) +
+    # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
+    # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
+    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
+    facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
+
+
+
+################## base R pie ####################################
+# when_obtain_simple_complex <- c("2 days or more",
+#                         "24h or less",
+#                         "Same day")
+# 
+# when_simple <- round(c(0.1289111, 0.5419274, 0.3291615), digits = 2) * 100
+# when_complex <- round(c(0.33625, 0.51625, 0.14750), digits = 2) * 100
+# 
+# cols = brewer.pal(n = length(when_obtain_simple_complex), name = 'Set1')
+# par(mfrow = c(1, 2))
+# 
+# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for simple procedures, low risk patients)."))
+# pie(when_simple, 
+#     labels = paste0(when_simple, "%"),
+#     clockwise = TRUE,
+#     col = cols,
+#     cex.main=3, 
+#     cex = 2.5,
+#     main = "simple procedures",
+#     radius = 1.2,
+#     border = "white")
+# 
+# legend("bottom", 
+#        legend = when_obtain_simple_complex,
+#        fill = cols,
+#        cex = 1.5, 
+#        bty = "n",
+#        border = "white",
+#        inset = -.06)
+# 
+# # prop.table(table(survey_data$"When do you need to obtain Informed consent for elective surgery based on legal requirements (for complex procedures, higher risk patients)."))
+# pie(when_complex,
+#     labels = paste0(when_complex, "%"),
+#     clockwise = TRUE,
+#     cex.main=3, 
+#     cex = 2.5,
+#     col = cols,
+#     main = "complex procedures",
+#     radius = 1.2,
+#     border = "white")
 ```
 
