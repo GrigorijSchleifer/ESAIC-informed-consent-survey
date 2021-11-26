@@ -466,8 +466,8 @@ ggarrange(future_consent_plot,
 prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
 
 # 24 h prior and 24 prior because of daily routine pooled together
-technological <- data.frame(answer = c("Different", "No", "Yes"),
-                        when_simple = round(c(0.06647399, 0.70231214, 0.23121387), 3) * 100)
+technological <- data.frame(answer = c("Depends on the procedure", "Yes", "No"),
+                        when_simple = round(c(0.06647399, 0.23121387, 0.70231214), 3) * 100)
 
 
 
