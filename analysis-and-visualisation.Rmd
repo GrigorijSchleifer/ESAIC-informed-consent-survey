@@ -15,8 +15,6 @@ library(xlsx)
 library(ggpubr)
 library(scales)
 
-
-
 # library(ReporteRs)
 # library(magrittr)
 ```
@@ -129,6 +127,8 @@ survey_data_barchart %>%
 ### Results
 ```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
+table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?")
+
 
 online_legal_ped_answers <- data.frame(answer = c("Depends on the procedure", "Yes", "No"),
                                        counts = round(c(0.09813084, 0.22897196, 0.67289720), 3) * 100)
@@ -228,7 +228,9 @@ map_dataframe %>%
 ```
 ```{r PIE Do you need to obtain written Informed consent for elective surgery from both parents or just from one?}
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
+table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?")
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
+table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?")
 
 both_consent <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3)),
                         answer = rep(c("Both parents", "Different", "One, who is present"), 2),
@@ -291,11 +293,11 @@ both_consent %>%
 #     border = "white")
 ```
 ```{r BARCHART ID dilemma}
-table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
 prop.table(table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)"))
+table(survey_data$"Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)")
 
-table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)")
 prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
+table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)")
 
 id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
                              Answer = rep(c("Depends on the procedure", "No", "Yes"), 2),
@@ -378,7 +380,9 @@ regulations %>%
 ```
 ```{r Future dilemma}
 prop.table(table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?"))
+table(survey_data$"How would you prefer to do the anaesthesiological preoperative evaluation in the future?")
 prop.table(table(survey_data$"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?"))
+table(survey_data$"When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?")
 
 
 
@@ -392,15 +396,16 @@ future_consent <- data.frame(answer = c("In person",
 future_consent_ped <- data.frame(answer = c("Depends on the procedure", "No", "Yes"),
                                  counts = round(c(0.0755814, 0.3226744, 0.6017442), 3) * 100)
 
+
 future_consent_plot <- future_consent %>% 
     ggplot(aes(x="", y=counts, fill=answer)) +
     geom_bar(stat="identity", width=1, color = "white") +
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(counts, "%")),
-              size = 4, 
+              size = 10, 
               colour="white",
-              position = position_stack(vjust = 0.5)) +
+              position = position_stack(vjust = 0.6)) +
     theme(legend.position="bottom",
           legend.title = element_blank(),
           legend.text = element_text(size=25),
@@ -417,7 +422,7 @@ future_consent_ped_plot <- future_consent_ped %>%
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(counts, "%")),
-              size = 4, 
+              size = 10, 
               colour="white",
               position = position_stack(vjust = 0.5)) +
     theme(legend.position="bottom",
@@ -464,6 +469,7 @@ ggarrange(future_consent_plot,
 ```
 ```{r Technical implementation}
 prop.table(table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?"))
+table(survey_data$"Is it possible to obtain informed consent online via internet, in your routine setting?")
 
 # 24 h prior and 24 prior because of daily routine pooled together
 technological <- data.frame(answer = c("Depends on the procedure", "Yes", "No"),
@@ -564,6 +570,7 @@ technical_map_joined %>%
           rect = element_blank()) +
     scale_fill_gradient(low = "#F5F5F5", high = "#438C67") 
 ```
+
 ```{r Plot ...: What are your major concerns about online or telephone interviews?}
 reasons_against <- survey_fragments %>% 
     select(c("lack of contact", 
