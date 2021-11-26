@@ -233,7 +233,7 @@ prop.table(table(survey_data$"Do you need to obtain written Informed consent for
 table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?")
 
 both_consent <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3)),
-                        answer = rep(c("Both parents", "Different", "One, who is present"), 2),
+                        answer = rep(c("Both parents", "Depends on the procedure", "One, who is present"), 2),
                         when_simple = round(c(0.14219474, 0.08191654, 0.77588872, 0.2569231, 0.1046154, 0.6384615), digits = 3) * 100)
 
 both_consent %>% 
@@ -331,6 +331,7 @@ id_dilemma_tbl %>%
 ```
 ```{r Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?}
 prop.table(table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?"))
+table(survey_data$"Is there a special regulation in your country during this pandemic situation favouring online or telephone informed consent?")
 
 regulations <- data.frame(answer = c("Unsure", "No", "Yes"),
                           when_simple = round(c(0.2518703, 0.5610973, 0.1870324), digits = 3) * 100)
