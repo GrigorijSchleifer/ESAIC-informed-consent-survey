@@ -130,7 +130,7 @@ survey_data_barchart %>%
 ```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
 prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 
-online_legal_ped_answers <- data.frame(answer = c("Different", "Yes", "No"),
+online_legal_ped_answers <- data.frame(answer = c("Depends on the procedure", "Yes", "No"),
                                        counts = round(c(0.09813084, 0.22897196, 0.67289720), 3) * 100)
 
 online_legal_ped_answers %>% 
@@ -298,7 +298,7 @@ table(survey_data$"In case of personal presence of the parent/caregiver do you r
 prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
 
 id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
-                             Answer = rep(c("Different", "No", "Yes"), 2),
+                             Answer = rep(c("Depends on the procedure", "No", "Yes"), 2),
                              # prevent geom_col to order bars alphabetically
                              dilemma = factor(c(rep("ID should be controlled", 3), rep("Actually controlled", 3)),
                                               levels = c("ID should be controlled", "Actually controlled")),
