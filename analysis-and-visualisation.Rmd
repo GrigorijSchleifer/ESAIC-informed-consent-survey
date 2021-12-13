@@ -369,7 +369,8 @@ regulations %>%
           strip.text.x = element_text(size=35)) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 # pandemic_adjustments_values = round(c(0.2518703, 0.5610973, 0.1870324), 2) * 100
 # 
