@@ -70,7 +70,7 @@ summary(tableOne)
 #            row.names = TRUE, 
 #            append = TRUE)
 ```
-```{r Plot Specialty distribution separated by country}
+```{r Plot Specialty distribution separated by country (images saved)}
 survey_data_barchart <- survey_data %>% 
     select(c("Country where you work?", "Your expert level"))
 
@@ -128,10 +128,12 @@ survey_data_barchart %>%
 
 
 ### Results
-```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
+```{r PIE Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone (saved) ?}
 prop.table(table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?"))
 table(survey_data$"Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?")
 
+# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 online_legal_ped_answers <- data.frame(answer = c("Depends on the procedure", "Yes", "No"),
                                        counts = round(c(0.09813084, 0.22897196, 0.67289720), 3) * 100)
@@ -151,7 +153,8 @@ online_legal_ped_answers %>%
           legend.spacing.x = unit(1.5, 'cm')) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 # pie(online_legal_ped, 
 #     labels = paste0(online_legal_ped, "%"),
@@ -170,7 +173,7 @@ online_legal_ped_answers %>%
 #        border = "white",
 #        inset = -.06)
 ```
-```{r MAP Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone?}
+```{r MAP Do you know if it is legally allowed to obtain informed consent from the parent via Internet or telephone? (saved)?}
 # counts of responses in different countries
 only_counts_responses <- survey_fragments %>% 
     dplyr::filter(country != "Other") %>% 
@@ -229,7 +232,7 @@ map_dataframe %>%
     labs(title = "Proportion ") +
     coord_flip()
 ```
-```{r PIE Do you need to obtain written Informed consent for elective surgery from both parents or just from one?}
+```{r PIE Do you need to obtain written Informed consent for elective surgery from both parents or just from one? (saved)}
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?"))
 table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (simple procedures, low risk patients)?")
 prop.table(table(survey_data$"Do you need to obtain written Informed consent for elective surgery due to legal requirements from both parents or just from one (complex procedures, higher risk patients)?"))
@@ -241,7 +244,7 @@ both_consent <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3
 
 
 # "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
-# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494")) + 
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 both_consent %>% 
     ggplot(aes(x="", y=when_simple, fill=answer)) +
@@ -308,6 +311,9 @@ table(survey_data$"Do you think it is necessary to verify the identity of the pa
 prop.table(table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"))
 table(survey_data$"In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)")
 
+# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
+
 id_dilemma_tbl <- data.frame(Values = c(49, 234, 362, 29, 423, 193),
                              Answer = rep(c("Depends on the procedure", "No", "Yes"), 2),
                              # prevent geom_col to order bars alphabetically
@@ -320,7 +326,7 @@ id_dilemma_tbl %>%
     ggplot(aes(x = dilemma, y = Values, fill = Answer), position = "fill") +
     geom_col(colour="white") +
     # scale_fill_brewer(palette = "Set1") + 
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) + 
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494")) +
     theme(axis.text.x = element_text(size = 30),
           axis.text.y = element_blank(),
           axis.ticks = element_blank(),
@@ -413,7 +419,7 @@ future_consent_plot <- future_consent %>%
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(counts, "%")),
-              size = 10, 
+              size = 5.5, 
               colour="white",
               position = position_stack(vjust = 0.6)) +
     theme(legend.position="bottom",
@@ -424,7 +430,8 @@ future_consent_plot <- future_consent %>%
           plot.margin=unit(c(1,1,1.2,1), "cm")) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 future_consent_ped_plot <- future_consent_ped %>% 
     ggplot(aes(x="", y=counts, fill=answer)) +
@@ -432,7 +439,7 @@ future_consent_ped_plot <- future_consent_ped %>%
     coord_polar("y", start=0) + 
     theme_void() + 
     geom_text(aes(label = paste0(counts, "%")),
-              size = 10, 
+              size = 5.5, 
               colour="white",
               position = position_stack(vjust = 0.5)) +
     theme(legend.position="bottom",
@@ -442,7 +449,8 @@ future_consent_ped_plot <- future_consent_ped %>%
           plot.margin=unit(c(1.2,1,1,1), "cm")) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C")) 
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
     # facet_wrap(~factor(simple_complex, levels = c("simple", "complex")))
                         
 
@@ -485,6 +493,8 @@ table(survey_data$"Is it possible to obtain informed consent online via internet
 technological <- data.frame(answer = c("Depends on the procedure", "Yes", "No"),
                         when_simple = round(c(0.06647399, 0.23121387, 0.70231214), 3) * 100)
 
+# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 
 technological %>% 
@@ -503,7 +513,8 @@ technological %>%
           strip.text.x = element_text(size=35)) +
     # "#00441B", "#053060", "#660A1F", "#A7771C" (Dunkel)
     # "#4B72AF", "#54A968", "#C64E51", "#DCAD94" (etwas weniger knallig)
-    scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    # scale_fill_manual(values=c("#B2172B", "#08598D", "#1E9D77", "#A7771C"))
+    scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494"))
 
 # 
 # 
