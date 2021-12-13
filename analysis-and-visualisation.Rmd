@@ -239,12 +239,9 @@ both_consent <- data.frame(simple_complex = c(rep("simple", 3), rep("complex", 3
                         answer = rep(c("Both parents", "Depends on the procedure", "One, who is present"), 2),
                         when_simple = round(c(0.14219474, 0.08191654, 0.77588872, 0.2569231, 0.1046154, 0.6384615), digits = 3) * 100)
 
-# "#bae4bc", "#7bccc4","#43a2ca", "#0868ac" 1
-# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2
-# "#c2e699", "#78c679", "#31a354", "#006837" 3
 
-
-
+# "#a1dab4", "#41b6c4", "#2c7fb8", "#253494" 2 (Claudia bestätigt)
+# scale_fill_manual(values=c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494")) + 
 
 both_consent %>% 
     ggplot(aes(x="", y=when_simple, fill=answer)) +
