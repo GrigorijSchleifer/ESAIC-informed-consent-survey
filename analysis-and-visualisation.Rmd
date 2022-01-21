@@ -2,6 +2,11 @@
 title: "Digital online patient informed consent for anesthesia before elective diagnostic procedures or surgery: Recent practice in children – here stands Europe (2021)"
 output: html_document
 ---
+
+```{r}
+# Hello ESAIC!
+```
+
 ```{r setup, include=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -24,6 +29,7 @@ survey_data <- read_csv("survey_data_no_other.csv")
 survey_data_all_countries <- read_csv("survey_data_all_countries.csv")
 survey_fragments <- read_csv("survey_fragments.csv")
 ```
+
 
 ### Methods
 ```{r Profession distribution}
