@@ -681,13 +681,13 @@ Questionaire_items = c(
     "Do you know if it is legally allowed to obtain informed consent from the parent/caregiver via Internet or telephone?",
     "When ensuring a certain guideline, which may include i.e. specific appointment (time and date) for the interview, secure data protected online service, asking if there is a relaxed environment without distraction, parents’ explicit agreement in online or telephone interview. Would this be an alternative to personal face-to-face meetings?",
     "Do you think it is necessary to verify the identity of the parent/guardian  (i.e. ID card)",
-    "In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)",
+    "In case of personal presence of the parent/caregiver do you routinely check the identity or legal responsibility of the parent/caregiver (i.e. ID card)"
     )
  
 Questionaire_items <-
     CreateTableOne(
-        data = survey,
-        vars = contVars_Questionaire_items,
+        data = survey_data,
+        vars = Questionaire_items,
         # factorVars = factorVars,
         addOverall = FALSE,
         # strata =
