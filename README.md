@@ -2,7 +2,7 @@
 
 <br>
 
-<strong>Background:</strong> One undisputed benefit of digital support is the possibility of contact reduc- tion, which has become particularly important in the context of the COVID-19 pandemic. However, to the best of our knowledge, there is currently no study assessing the Europe-wide use of digital online pre-operative patient information or evaluation in the health sector. The aim of this study was to give an overview of the current status in Europe. 
+<strong>Background:</strong> One undisputed benefit of digital support is the possibility of contact reduction, which has become particularly important in the context of the COVID-19 pandemic. However, to the best of our knowledge, there is currently no study assessing the Europe-wide use of digital online pre-operative patient information or evaluation in the health sector. The aim of this study was to give an overview of the current status in Europe. 
 
 <strong>Methods:</strong> A web-based questionnaire covering the informed consent process was sent to members of the European Society of Anaesthesia and Intensive Care Medicine (ESAIC) in 47 European countries (42,433 recipients/930 responses). Six questions related specifically to the practice in paediatrics. 
 
